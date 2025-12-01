@@ -1,0 +1,493 @@
+{
+    "dataRoles": [
+        {
+            "displayName": "Timestamp",
+            "name": "timestamp",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Series",
+            "name": "series",
+            "kind": "Grouping"
+        },
+        {
+            "displayName": "Values",
+            "name": "values",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Anomalies",
+            "name": "anomalies",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Timeline Markers",
+            "name": "timelineMarkers",
+            "kind": "Measure"
+        },
+        {
+            "displayName": "Filter Field",
+            "name": "filterField",
+            "kind": "Grouping"
+        }
+    ],
+    "objects": {
+        "brushSettings": {
+            "displayName": "Brush Settings",
+            "properties": {
+                "brushColor": {
+                    "displayName": "Brush Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "brushOpacity": {
+                    "displayName": "Brush Opacity",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "areaSettingsGroup": {
+            "displayName": "Area Settings",
+            "properties": {
+                "showAreaChart": {
+                    "displayName": "Show Area Chart",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "fill": {
+                    "displayName": "Area Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "areaOpacity": {
+                    "displayName": "Area Opacity",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "dataPoint": {
+            "displayName": "Line Settings",
+            "properties": {
+                "fill": {
+                    "displayName": "Line Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "lineWidth": {
+                    "displayName": "Line Width",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "axisSettingsGroup": {
+            "displayName": "Time Axis Settings",
+            "properties": {
+                "showAxis": {
+                    "displayName": "Show Time Axis",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "axisColor": {
+                    "displayName": "Axis Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "axisFontSize": {
+                    "displayName": "Axis Font Size",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "axisFontFamily": {
+                    "displayName": "Axis Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                }
+            }
+        },
+        "yAxisSettingsGroup": {
+            "displayName": "Y Axis Settings",
+            "properties": {
+                "yAxisMin": {
+                    "displayName": "Y Axis Min",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "yAxisMax": {
+                    "displayName": "Y Axis Max",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "showZeroLine": {
+                    "displayName": "Show Zero Line",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "zeroLineColor": {
+                    "displayName": "Zero Line Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "zeroLineStrokeWidth": {
+                    "displayName": "Zero Line Stroke Width",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "marginSettingsGroup": {
+            "displayName": "Margin Settings",
+            "properties": {
+                "marginTop": {
+                    "displayName": "Margin Top",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "marginRight": {
+                    "displayName": "Margin Right",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "marginBottom": {
+                    "displayName": "Margin Bottom",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "marginLeft": {
+                    "displayName": "Margin Left",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "anomaliesSettings": {
+            "displayName": "Anomalies Settings",
+            "properties": {
+                "markerType": {
+                    "displayName": "Marker Type",
+                    "type": {
+                        "enumeration": [
+                            { "displayName": "Circle", "value": "circle" },
+                            { "displayName": "Square", "value": "square" },
+                            { "displayName": "Triangle", "value": "triangle" },
+                            { "displayName": "Diamond", "value": "diamond" }
+                        ]
+                    }
+                },
+                "markerSize": {
+                    "displayName": "Marker Size",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "markerColor": {
+                    "displayName": "Marker Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "markerOpacity": {
+                    "displayName": "Marker Opacity",
+                    "type": {
+                        "numeric": true
+                    }
+                }
+            }
+        },
+        "timelineMarkerSettings": {
+            "displayName": "Timeline Markers Settings",
+            "properties": {
+                "lineColor": {
+                    "displayName": "Line Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "lineWidth": {
+                    "displayName": "Line Width",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "lineOpacity": {
+                    "displayName": "Line Opacity",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "markerType": {
+                    "displayName": "Marker Type",
+                    "type": {
+                        "enumeration": [
+                            { "displayName": "Triangle Down", "value": "triangleDown" },
+                            { "displayName": "Triangle Up", "value": "triangleUp" },
+                            { "displayName": "Circle", "value": "circle" },
+                            { "displayName": "Square", "value": "square" }
+                        ]
+                    }
+                },
+                "markerSize": {
+                    "displayName": "Marker Size",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "markerColor": {
+                    "displayName": "Marker Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "markerOpacity": {
+                    "displayName": "Marker Opacity",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "markerPosition": {
+                    "displayName": "Marker Position",
+                    "type": {
+                        "enumeration": [
+                            { "displayName": "Top", "value": "top" },
+                            { "displayName": "Bottom", "value": "bottom" }
+                        ]
+                    }
+                }
+            }
+        },
+        "displaySettings": {
+            "displayName": "Display Settings",
+            "properties": {
+                "showSelectedRange": {
+                    "displayName": "Show Selected Range",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "dateFormat": {
+                    "displayName": "Display Date Format",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "prefix": {
+                    "displayName": "Prefix",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "fontFamily": {
+                    "displayName": "Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Font Size",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "fontColor": {
+                    "displayName": "Font Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "backgroundColor": {
+                    "displayName": "Background Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "alignment": {
+                    "displayName": "Alignment",
+                    "type": {
+                        "formatting": {
+                            "alignment": true
+                        }
+                    }
+                }
+            }
+        },
+        "outputSettings": {
+            "displayName": "Output Settings",
+            "properties": {
+                "delimiter": {
+                    "displayName": "Delimiter",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "outputFormat": {
+                    "displayName": "Output Date Format",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "useISOFormat": {
+                    "displayName": "Use ISO 8601 Format",
+                    "type": {
+                        "bool": true
+                    }
+                }
+            }
+        },
+        "seriesColor": {
+            "displayName": "Series Colors",
+            "properties": {
+                "fill": {
+                    "displayName": "Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "dataViewMappings": [
+        {
+            "conditions": [
+                {
+                    "timestamp": {
+                        "max": 1
+                    },
+                    "series": {
+                        "max": 1
+                    },
+                    "values": {
+                        "max": 1
+                    },
+                    "filterField": {
+                        "max": 1
+                    },
+                    "anomalies": {
+                        "max": 1
+                    },
+                    "timelineMarkers": {
+                        "max": 1
+                    }
+                }
+            ],
+            "categorical": {
+                "categories": {
+                    "select": [
+                        {
+                            "for": {
+                                "in": "timestamp"
+                            }
+                        },
+                        {
+                            "for": {
+                                "in": "filterField"
+                            }
+                        }
+                    ],
+                    "dataReductionAlgorithm": {
+                        "window": {
+                            "count": 30000
+                        }
+                    }
+                },
+                "values": {
+                    "group": {
+                        "by": "series",
+                        "select": [
+                            {
+                                "bind": {
+                                    "to": "values"
+                                }
+                            },
+                            {
+                                "bind": {
+                                    "to": "anomalies"
+                                }
+                            },
+                            {
+                                "bind": {
+                                    "to": "timelineMarkers"
+                                }
+                            }
+                        ],
+                        "dataReductionAlgorithm": {
+                            "top": {
+                                "count": 100
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ],
+    "privileges": []
+}

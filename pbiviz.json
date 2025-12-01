@@ -1,0 +1,26 @@
+{
+    "visual": {
+        "name": "TimeSeriesBrushSlicer",
+        "displayName": "Time Series Brush Slicer",
+        "guid": "TimeSeriesBrushSlicerEFF0BAA64FAF4DC989E3AB4DE7610647",
+        "visualClassName": "Visual",
+        "version": "1.0.0.0",
+        "description": "A time brush slicer that outputs selected time range as a text string for use with dynamic M query parameters",
+        "supportUrl": "https://github.com/slavatrofimov/Time-Series-Brush-Slicer",
+        "gitHubUrl": "https://github.com/slavatrofimov/Time-Series-Brush-Slicer"
+    },
+    "apiVersion": "5.3.0",
+    "author": {
+        "name": "Slava Trofimov",
+        "email": "slava.trofimov@microsoft.com"
+    },
+    "assets": {
+        "icon": "assets/icon.svg"
+    },
+    "externalJS": [],
+    "style": "style/visual.less",
+    "capabilities": "capabilities.json",
+    "dependencies": null,
+    "stringResources": [],
+    "version": "1.0.0.0"
+}
