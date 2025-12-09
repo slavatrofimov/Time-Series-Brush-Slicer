@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
   "name": "18a1591bc95380599be9",
   "position": {
-    "x": 488.5839929639402,
-    "y": 201.5127528583993,
+    "x": 488.49772382397566,
+    "y": 201.03186646433988,
     "z": 13000,
-    "height": 507.72207563764289,
-    "width": 783.53562005277047,
+    "height": 509.86342943854322,
+    "width": 783.73292867981786,
     "tabOrder": 13000
   },
   "visual": {
@@ -577,5 +577,75 @@
       ]
     },
     "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "c78a176369b8f390d538",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Time Series Core"
+              }
+            },
+            "Property": "timestamp"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "ebc7b6f7dfa1b68d00a1",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Time Series Core"
+                  }
+                },
+                "Property": "value"
+              }
+            },
+            "Function": 4
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8945176adcdfd1563170",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Time Series Core"
+                  }
+                },
+                "Property": "anomaly_indicator"
+              }
+            },
+            "Function": 4
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "70b0801497e53ea6e4d6",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Time Series Core"
+              }
+            },
+            "Property": "TagName"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
   }
 }

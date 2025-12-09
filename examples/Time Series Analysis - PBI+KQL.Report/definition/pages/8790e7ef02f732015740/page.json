@@ -74,38 +74,8 @@
       "type": "NoFilter"
     },
     {
-      "source": "650dd7df5a8f37c320f0",
-      "target": "cba0c379f908e8383c95",
-      "type": "NoFilter"
-    },
-    {
-      "source": "650dd7df5a8f37c320f0",
-      "target": "77fabee6ef70eaed2f4b",
-      "type": "NoFilter"
-    },
-    {
-      "source": "650dd7df5a8f37c320f0",
-      "target": "73ff074803a6fc44ad9c",
-      "type": "NoFilter"
-    },
-    {
-      "source": "650dd7df5a8f37c320f0",
-      "target": "eaca565ddc21743757e3",
-      "type": "NoFilter"
-    },
-    {
-      "source": "650dd7df5a8f37c320f0",
-      "target": "c4a3e8d0348447b4a115",
-      "type": "NoFilter"
-    },
-    {
       "source": "cba0c379f908e8383c95",
       "target": "18a1591bc95380599be9",
-      "type": "NoFilter"
-    },
-    {
-      "source": "cba0c379f908e8383c95",
-      "target": "650dd7df5a8f37c320f0",
       "type": "NoFilter"
     }
   ]
