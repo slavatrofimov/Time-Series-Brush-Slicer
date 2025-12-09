@@ -21,7 +21,16 @@ This solution shows how to analyze time series data in Power BI using an interac
 - **Detect anomalies** automatically highlighted on your charts
 - **View descriptive statistics and correlations** between different time series
 - **Contextutalize time series data** with details about asset hierarchies and tag metadata
-- **Intuitive chart layouts** help you identify trends in your data.
+- **Intuitive chart layouts** help you identify trends, patterns and relationships in your data.
+
+## Major Components of the Solution
+- **KQL Database** in Fabric or Azure Data Explorer provides highly scalable and performant time series storage, processing and query capabilities.
+- **Power Semantic Model** in DirectQuery mode delegates query execution to the KQL Database.
+- **Power BI Dynamic M Query Parameters** pass user inputs to the Power Query engine, to construct custom queries that are sent to the KQL database
+- **Power Query function** parse parameters and implement advanced logic, such as automatically computing the size of time bins over any time periods.
+- **Power BI Field Parameters** to enable end users to customize chart layouts for more intuitive analysis
+- **Power BI Custom Visual** to implement the time brushing functionality 
+- **Power BI Report** offers rich and highly-interactive data visualizaiton capabilities.
 
 ## About the Time Series Brush Slicer
 
@@ -65,8 +74,8 @@ Control the analysis through report parameters:
 - **Time range**: Brush selection or relative periods (last 7 days, last hour, etc.)
 - **Metrics**: Select which time series to analyze
 - **Aggregation**: Choose how to summarize data (average, sum, min, max)
-- **Time granularity**: Auto or specific (1min, 1hour, 1day, etc.)
-- **Max data points**: Balance detail with performance (100-5000 points)
+- **Time granularity**: Auto or specific (1sec, 1min, 1hour, 1day, etc.)
+- **Max data points**: Balance detail with performance (100-1500 points)
 
 ## Getting Started
 
