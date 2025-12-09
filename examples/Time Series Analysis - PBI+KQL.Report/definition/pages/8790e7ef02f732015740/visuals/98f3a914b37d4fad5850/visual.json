@@ -31,29 +31,6 @@
             }
           ]
         },
-        "timelineMarkers": {
-          "projections": [
-            {
-              "field": {
-                "Aggregation": {
-                  "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "Time Brush"
-                        }
-                      },
-                      "Property": "TimelineMarker"
-                    }
-                  },
-                  "Function": 3
-                }
-              },
-              "queryRef": "Min(Time Brush.TimelineMarker)",
-              "nativeQueryRef": "First TimelineMarker"
-            }
-          ]
-        },
         "anomalies": {
           "projections": [
             {
@@ -73,7 +50,8 @@
                 }
               },
               "queryRef": "Sum(Time Brush.anomaly)",
-              "nativeQueryRef": "Max of anomaly"
+              "nativeQueryRef": "anomaly",
+              "displayName": "anomaly"
             }
           ]
         },
@@ -95,29 +73,6 @@
             }
           ]
         },
-        "values": {
-          "projections": [
-            {
-              "field": {
-                "Aggregation": {
-                  "Expression": {
-                    "Column": {
-                      "Expression": {
-                        "SourceRef": {
-                          "Entity": "Time Brush"
-                        }
-                      },
-                      "Property": "z_score"
-                    }
-                  },
-                  "Function": 1
-                }
-              },
-              "queryRef": "Sum(Time Brush.z_score)",
-              "nativeQueryRef": "Average of z_score"
-            }
-          ]
-        },
         "filterField": {
           "projections": [
             {
@@ -133,6 +88,54 @@
               },
               "queryRef": "Time Brush.time_brush_range_input",
               "nativeQueryRef": "time_brush_range_input"
+            }
+          ]
+        },
+        "values": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Time Brush"
+                        }
+                      },
+                      "Property": "value"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Sum(Time Brush.value)",
+              "nativeQueryRef": "value",
+              "displayName": "value"
+            }
+          ]
+        },
+        "timelineMarkers": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Time Brush"
+                        }
+                      },
+                      "Property": "timeline_marker"
+                    }
+                  },
+                  "Function": 3
+                }
+              },
+              "queryRef": "Min(Time Brush.timeline_marker)",
+              "nativeQueryRef": "timeline marker",
+              "displayName": "timeline marker"
             }
           ]
         }
@@ -324,25 +327,6 @@
         "type": "Categorical"
       },
       {
-        "name": "668d9dc9b445da5efc05",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Time Brush"
-                  }
-                },
-                "Property": "TimelineMarker"
-              }
-            },
-            "Function": 3
-          }
-        },
-        "type": "Advanced"
-      },
-      {
         "name": "bf2ef96d04f7f850dec3",
         "field": {
           "Column": {
@@ -355,25 +339,6 @@
           }
         },
         "type": "Categorical"
-      },
-      {
-        "name": "771d0ab56287c83a0a96",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Time Brush"
-                  }
-                },
-                "Property": "z_score"
-              }
-            },
-            "Function": 1
-          }
-        },
-        "type": "Advanced"
       },
       {
         "name": "8f26aab7c709cd445f5d",

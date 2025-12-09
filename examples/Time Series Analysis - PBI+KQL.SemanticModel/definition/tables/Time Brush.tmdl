@@ -1,10 +1,6 @@
 table 'Time Brush'
 	lineageTag: 2d446c52-05d8-41bd-a95d-e02527d74091
 
-	measure Measure = 1
-		formatString: 0
-		lineageTag: affa167c-d16f-4df0-96e4-9a396d62a446
-
 	column timestamp
 		dataType: dateTime
 		formatString: General Date
@@ -24,17 +20,6 @@ table 'Time Brush'
 
 		annotation SummarizationSetBy = Automatic
 
-	column z_score
-		dataType: double
-		sourceProviderType: double
-		lineageTag: 723770f6-a387-4735-b552-f68f772b0d0e
-		summarizeBy: sum
-		sourceColumn: z_score
-
-		annotation SummarizationSetBy = Automatic
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
 	column anomaly
 		dataType: double
 		sourceProviderType: double
@@ -46,10 +31,30 @@ table 'Time Brush'
 
 		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
+	column value
+		dataType: double
+		sourceProviderType: double
+		lineageTag: 78458280-7824-46fd-b62f-dbe9590d1443
+		summarizeBy: sum
+		sourceColumn: value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column timeline_marker
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 5ac86c7f-f83d-4b42-b71d-98eab5bd388f
+		summarizeBy: none
+		sourceColumn: timeline_marker
+
+		annotation SummarizationSetBy = Automatic
+
 	column time_brush_range_input
 		dataType: string
 		sourceProviderType: nvarchar(max)
-		lineageTag: ee8c5092-e98b-4d54-ae6d-1febbe6226e0
+		lineageTag: 5a5ee78c-bc6c-4452-99b6-2119891a7e53
 		summarizeBy: none
 		sourceColumn: time_brush_range_input
 
@@ -59,15 +64,6 @@ table 'Time Brush'
 				  "kind": 1,
 				  "selectAllValue": "__SelectAll__"
 				}
-
-		annotation SummarizationSetBy = Automatic
-
-	column TimelineMarker
-		dataType: string
-		sourceProviderType: nvarchar(max)
-		lineageTag: 124ff529-c74a-4464-9bb7-cd7a84bad1da
-		summarizeBy: none
-		sourceColumn: TimelineMarker
 
 		annotation SummarizationSetBy = Automatic
 
@@ -110,8 +106,8 @@ table 'Time Brush'
 				    | mv-expand timestamp, z_score, anomaly
 				    | project todatetime(timestamp), tostring(tag), todouble(z_score), anomaly = todouble(anomaly)
 				    | project timestamp, tag, z_score, anomaly = iif(anomaly != 0, z_score, double(null))
-				    | extend time_brush_range_input = ''
 				    | union Markers
+				    | project timestamp, tag, value = z_score, anomaly, timeline_marker = TimelineMarker, time_brush_range_input = ''
 				    ",
 				    Source = AzureDataExplorer.Contents(p_kql_cluster, p_kql_db, Query, [MaxRows=null, MaxSize=null, NoTruncate=null, AdditionalSetStatements=null])
 				in
