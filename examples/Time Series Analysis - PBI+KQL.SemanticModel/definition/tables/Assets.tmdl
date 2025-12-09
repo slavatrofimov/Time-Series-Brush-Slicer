@@ -1,0 +1,58 @@
+table Assets
+	lineageTag: 39d24e29-cdde-4413-a48a-800393eb2305
+
+	column Tag
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 03bdbfd4-6eb5-4275-a333-9c990e2a9725
+		summarizeBy: none
+		sourceColumn: Tag
+
+		annotation SummarizationSetBy = Automatic
+
+	column Plant
+		dataType: string
+		lineageTag: 8e28a929-3bb0-4ab0-be1a-0775b2b08334
+		summarizeBy: none
+		sourceColumn: Plant
+
+		annotation SummarizationSetBy = Automatic
+
+	column Factory
+		dataType: string
+		lineageTag: aabcaac4-8e69-44f3-92e7-c52dd85b30ea
+		summarizeBy: none
+		sourceColumn: Factory
+
+		annotation SummarizationSetBy = Automatic
+
+	column Line
+		dataType: string
+		lineageTag: 12f71f9c-40a7-48af-b750-59d5a7012919
+		summarizeBy: none
+		sourceColumn: Line
+
+		annotation SummarizationSetBy = Automatic
+
+	column Station
+		dataType: string
+		lineageTag: 6a5122ce-c195-47b8-8afd-23cf496d6f67
+		summarizeBy: none
+		sourceColumn: Station
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Assets = m
+		mode: directQuery
+		source =
+				let
+				    Query = "TimeseriesHierarchy
+				| project Tag = TimeseriesId, Plant  = tostring(Path[0]), Factory = tostring(Path[1]), Line = tostring(Path[2]), Station = tostring(Path[3])",
+				    Source = AzureDataExplorer.Contents(p_kql_cluster, p_kql_db, Query, [MaxRows=null, MaxSize=null, NoTruncate=null, AdditionalSetStatements=null])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

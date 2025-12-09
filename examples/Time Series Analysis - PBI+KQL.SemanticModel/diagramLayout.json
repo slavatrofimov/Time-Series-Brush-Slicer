@@ -1,0 +1,211 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 2878.8888888888887,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 284,
+            "y": 105.17479356491941
+          },
+          "nodeIndex": "MaxBinsOptions",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 568,
+            "y": 105.17479356491941
+          },
+          "nodeIndex": "AggregationOptions",
+          "nodeLineageTag": "8ed54783-9dee-47cf-ad51-3e8cecda3b04",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 11
+        },
+        {
+          "location": {
+            "x": 852,
+            "y": 93.174793564919412
+          },
+          "nodeIndex": "TimeSpanOptions",
+          "nodeLineageTag": "c719061e-a619-419d-a066-a05792d2d9ba",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 13
+        },
+        {
+          "location": {
+            "x": 2840,
+            "y": 105.17479356491941
+          },
+          "nodeIndex": "RelativeTime",
+          "nodeLineageTag": "b030fa30-a2fc-4c3a-bf0b-c644750bb22f",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 12
+        },
+        {
+          "location": {
+            "x": 1704,
+            "y": 105.17479356491941
+          },
+          "nodeIndex": "Tags",
+          "nodeLineageTag": "1698df3f-fcb1-4dfe-bce6-c4e1b7df42e5",
+          "size": {
+            "height": 283.15261958997723,
+            "width": 234
+          },
+          "zIndex": 14
+        },
+        {
+          "location": {
+            "x": 2064.9384965831437,
+            "y": 352.34563638952079
+          },
+          "nodeIndex": "Assets",
+          "nodeLineageTag": "39d24e29-cdde-4413-a48a-800393eb2305",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 3025.1111111111113,
+            "y": 298.78096921665315
+          },
+          "nodeIndex": "SmallMultiplesConfig",
+          "nodeLineageTag": "e5033285-d4db-4d43-bb42-153cd66f0d23",
+          "size": {
+            "height": 243.11111111111114,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 3692,
+            "y": 291.30691201594448
+          },
+          "nodeIndex": "LegendConfig",
+          "nodeLineageTag": "98bd505b-f91e-40aa-8ef7-f9c0c3669093",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 3408,
+            "y": 317.124679669703
+          },
+          "nodeIndex": "ChartConfig",
+          "nodeLineageTag": "b64ea08a-c524-49f6-91ea-4bd766412599",
+          "size": {
+            "height": 207.33333333333337,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 93.174793564919412
+          },
+          "nodeIndex": "DateInputs",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1136,
+            "y": 93.174793564919412
+          },
+          "nodeIndex": "Time Series Core",
+          "size": {
+            "height": 424.66666666666663,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 3976,
+            "y": 288.58026053530671
+          },
+          "nodeIndex": "Correlation Coefficients",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4260,
+            "y": 228.58026053530671
+          },
+          "nodeIndex": "Descriptive Statistics",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4556.8888888888887,
+            "y": 294.53875205644079
+          },
+          "nodeIndex": "Time Brush",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 4840.8888888888887,
+            "y": 258.64368593394045
+          },
+          "nodeIndex": "Effective Time Grain",
+          "nodeLineageTag": "65cef854-7805-4e02-a4b4-7aca94e6c368",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 90,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

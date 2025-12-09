@@ -1,0 +1,495 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "650dd7df5a8f37c320f0",
+  "position": {
+    "x": 488.84422110552759,
+    "y": 79.942569992821248,
+    "z": 19000,
+    "height": 113.94113424264177,
+    "width": 782.88585786073213,
+    "tabOrder": 19000
+  },
+  "visual": {
+    "visualType": "TimeSeriesBrushSlicerEFF0BAA64FAF4DC989E3AB4DE7610647",
+    "query": {
+      "queryState": {
+        "series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Time Brush"
+                    }
+                  },
+                  "Property": "tag"
+                }
+              },
+              "queryRef": "TimeBrushQuery.tag",
+              "nativeQueryRef": "tag"
+            }
+          ]
+        },
+        "values": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Time Brush"
+                        }
+                      },
+                      "Property": "z_score"
+                    }
+                  },
+                  "Function": 4
+                }
+              },
+              "queryRef": "Sum(TimeBrushQuery.z_score)",
+              "nativeQueryRef": "Max of z_score"
+            }
+          ]
+        },
+        "timestamp": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Time Brush"
+                    }
+                  },
+                  "Property": "timestamp"
+                }
+              },
+              "queryRef": "TimeBrushQuery.timestamp",
+              "nativeQueryRef": "timestamp"
+            }
+          ]
+        },
+        "filterField": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Time Brush"
+                    }
+                  },
+                  "Property": "time_brush_range_input"
+                }
+              },
+              "queryRef": "Time Brush.time_brush_range_input",
+              "nativeQueryRef": "time_brush_range_input"
+            }
+          ]
+        },
+        "anomalies": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Time Brush"
+                        }
+                      },
+                      "Property": "anomaly"
+                    }
+                  },
+                  "Function": 4
+                }
+              },
+              "queryRef": "Sum(TimeBrushQuery.anomaly)",
+              "nativeQueryRef": "Max of anomaly"
+            }
+          ]
+        },
+        "timelineMarkers": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Time Brush"
+                        }
+                      },
+                      "Property": "TimelineMarker"
+                    }
+                  },
+                  "Function": 3
+                }
+              },
+              "queryRef": "Min(Time Brush.TimelineMarker)",
+              "nativeQueryRef": "First TimelineMarker"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Time Brush"
+                  }
+                },
+                "Property": "timestamp"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "areaSettingsGroup": [
+        {
+          "properties": {
+            "showAreaChart": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "areaOpacity": {
+              "expr": {
+                "Literal": {
+                  "Value": "20D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "FillRule": {
+                      "Input": {
+                        "Aggregation": {
+                          "Expression": {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Entity": "Time Brush"
+                                }
+                              },
+                              "Property": "z_score"
+                            }
+                          },
+                          "Function": 1
+                        }
+                      },
+                      "FillRule": {
+                        "linearGradient2": {
+                          "min": {
+                            "color": {
+                              "Literal": {
+                                "Value": "'#DD6B7F'"
+                              }
+                            },
+                            "value": {
+                              "Literal": {
+                                "Value": "-1D"
+                              }
+                            }
+                          },
+                          "max": {
+                            "color": {
+                              "Literal": {
+                                "Value": "'maxColor'"
+                              }
+                            },
+                            "value": {
+                              "Literal": {
+                                "Value": "1D"
+                              }
+                            }
+                          },
+                          "nullColoringStrategy": {
+                            "strategy": {
+                              "Literal": {
+                                "Value": "'asZero'"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "lineWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "2D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "anomaliesSettings": [
+        {
+          "properties": {
+            "markerSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "3D"
+                }
+              }
+            },
+            "markerOpacity": {
+              "expr": {
+                "Literal": {
+                  "Value": "60D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "timelineMarkerSettings": [
+        {
+          "properties": {
+            "lineOpacity": {
+              "expr": {
+                "Literal": {
+                  "Value": "60D"
+                }
+              }
+            },
+            "markerOpacity": {
+              "expr": {
+                "Literal": {
+                  "Value": "60D"
+                }
+              }
+            },
+            "markerSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Time Brush'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 1,
+                      "Percent": 0.6
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "12e1a139202f14a088df",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Time Brush"
+              }
+            },
+            "Property": "time_brush_range_input"
+          }
+        },
+        "type": "Categorical",
+        "objects": {
+          "general": [
+            {
+              "properties": {
+                "requireSingleSelect": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "true"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "a1174b8d2c1985ff83c1",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Time Brush"
+              }
+            },
+            "Property": "tag"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "dbfad475216c7aa5e3ff",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Time Brush"
+                  }
+                },
+                "Property": "z_score"
+              }
+            },
+            "Function": 4
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "a029dfa334ae9bf35954",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Time Brush"
+              }
+            },
+            "Property": "timestamp"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "cfb50598f4fb4fdca99f",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Time Brush"
+                  }
+                },
+                "Property": "anomaly"
+              }
+            },
+            "Function": 4
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "30bf88d37517b74af574",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Time Brush"
+                  }
+                },
+                "Property": "TimelineMarker"
+              }
+            },
+            "Function": 3
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

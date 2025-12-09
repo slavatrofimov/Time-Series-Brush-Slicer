@@ -1,0 +1,70 @@
+table Tags
+	lineageTag: 1698df3f-fcb1-4dfe-bce6-c4e1b7df42e5
+
+	column Tag
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: e0a3c286-1ad5-4970-bb74-c3d3969564ae
+		summarizeBy: none
+		sourceColumn: Tag
+
+		annotation SummarizationSetBy = Automatic
+
+	column TagName
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 5758c31f-56c7-4c5d-a2df-561f8501454c
+		summarizeBy: none
+		sourceColumn: TagName
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 2,
+				  "kind": 1,
+				  "supportsMultipleValues": true,
+				  "selectAllValue": ""
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column Metric
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: de4126c9-54f6-4c1a-b145-16f240149c22
+		summarizeBy: none
+		sourceColumn: Metric
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 07c9b7a1-4d7b-404a-addf-93b1274d8e84
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column EngUnits
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: f7994136-0ee5-490f-b319-72c9259f0120
+		summarizeBy: none
+		sourceColumn: EngUnits
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Tags = m
+		mode: directQuery
+		source =
+				let
+				    Query = "TimeseriesMetadata
+				| project Tag = TimeseriesId, TagName = TimeseriesName, Metric = tostring(split(TimeseriesName, '-')[0]), Description, EngUnits",
+				    Source = AzureDataExplorer.Contents(p_kql_cluster, p_kql_db, Query, [MaxRows=null, MaxSize=null, NoTruncate=null, AdditionalSetStatements=null])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
