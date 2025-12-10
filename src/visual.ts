@@ -70,6 +70,14 @@ export class Visual implements IVisual {
     private filterColumnTarget: { table: string, column: string } | null = null;
     private lastTimeRange: [number, number] | null = null;
     
+    // Event handler references for cleanup
+    private contextMenuHandler: (e: MouseEvent) => void;
+    private lastBrushWidth: number = 0;
+    private lastBrushHeight: number = 0;
+    private dateFormatterCache: Map<string, (date: Date) => string> = new Map();
+    private brushUpdateTimeout: number | null = null;
+    private isProgrammaticBrushUpdate: boolean = false;
+    
     // Margins for the chart
     private margin = { top: 10, right: 20, bottom: 30, left: 20 };
 
@@ -137,14 +145,15 @@ export class Visual implements IVisual {
         this.markersGroup = this.svg.append("g").attr("class", "markers-group");
         this.axisGroup = this.svg.append("g").attr("class", "axis-group");
         
-        // Bind context menu
-        this.svgContainer.addEventListener("contextmenu", (e) => {
+        // Create and bind context menu handler (stored for cleanup)
+        this.contextMenuHandler = (e: MouseEvent) => {
             this.selectionManager.showContextMenu(null, {
                 x: e.clientX,
                 y: e.clientY
             });
             e.preventDefault();
-        });
+        };
+        this.svgContainer.addEventListener("contextmenu", this.contextMenuHandler);
     }
 
     public update(options: VisualUpdateOptions) {
@@ -490,29 +499,47 @@ export class Visual implements IVisual {
                 }
             }
             
-            // Line - render as individual segments between consecutive points
-            for (let i = 0; i < points.length - 1; i++) {
-                const p1 = points[i];
-                const p2 = points[i + 1];
+            // Line - group consecutive segments by color for better performance
+            const colorSegments = new Map<string, Array<{x: number, y: number}>>();
+            
+            for (let i = 0; i < points.length; i++) {
+                const p = points[i];
                 
-                // Skip if either point has null value
-                if (p1.value === null || p1.value === undefined || p2.value === null || p2.value === undefined) {
+                // Skip null values
+                if (p.value === null || p.value === undefined) {
                     continue;
                 }
                 
-                // Get color for this segment - use conditional formatting color if available
-                const segmentColor = p1.lineColor || defaultLineColor;
+                // Get color for this point
+                const color = p.lineColor || defaultLineColor;
                 
-                // Draw line segment
-                this.chartGroup.append("line")
-                    .attr("x1", this.xScale(p1.timestamp))
-                    .attr("y1", yScale(p1.value!))
-                    .attr("x2", this.xScale(p2.timestamp))
-                    .attr("y2", yScale(p2.value!))
-                    .attr("stroke", segmentColor)
-                    .attr("stroke-width", lineWidth)
-                    .attr("stroke-linecap", "round");
+                // Add point to the appropriate color segment
+                if (!colorSegments.has(color)) {
+                    colorSegments.set(color, []);
+                }
+                colorSegments.get(color)!.push({
+                    x: this.xScale(p.timestamp),
+                    y: yScale(p.value!)
+                });
             }
+            
+            // Render each color segment as a single path
+            colorSegments.forEach((pathPoints, color) => {
+                if (pathPoints.length < 2) return; // Need at least 2 points for a line
+                
+                // Build path data string
+                let pathData = `M ${pathPoints[0].x} ${pathPoints[0].y}`;
+                for (let i = 1; i < pathPoints.length; i++) {
+                    pathData += ` L ${pathPoints[i].x} ${pathPoints[i].y}`;
+                }
+                
+                this.chartGroup.append("path")
+                    .attr("d", pathData)
+                    .attr("stroke", color)
+                    .attr("stroke-width", lineWidth)
+                    .attr("stroke-linecap", "round")
+                    .attr("fill", "none");
+            });
         });
         
         // Render Anomalies
@@ -1029,17 +1056,36 @@ export class Visual implements IVisual {
         
         const brushOpacity = (this.formattingSettings?.brushSettingsCard?.brushOpacity?.value ?? 30) / 100;
         
-        // Remove existing brush
-        this.brushGroup.selectAll("*").remove();
+        // Check if brush needs recreation
+        const dimensionsChanged = Math.abs(this.lastBrushWidth - width) > 5 || 
+                                 Math.abs(this.lastBrushHeight - height) > 5;
+        const brushElementsExist = this.brushGroup.select(".overlay").size() > 0;
         
-        // Create brush
-        this.brush = d3.brushX()
-            .extent([[0, 0], [width, height]])
-            .on("brush", (event) => this.onBrush(event))
-            .on("end", (event) => this.onBrushEnd(event));
+        if (!this.brush || dimensionsChanged || !brushElementsExist) {
+            // Remove existing brush only if recreating
+            this.brushGroup.selectAll("*").remove();
             
-        // Add brush to group
-        const brushG = this.brushGroup.call(this.brush);
+            // Store new dimensions
+            this.lastBrushWidth = width;
+            this.lastBrushHeight = height;
+            
+            // Create brush with event handlers bound once
+            this.brush = d3.brushX()
+                .extent([[0, 0], [width, height]])
+                .on("brush", (event) => this.onBrush(event))
+                .on("end", (event) => this.onBrushEnd(event));
+                
+            // Add brush to group
+            this.brushGroup.call(this.brush);
+        } else {
+            // Just update the extent without recreating handlers
+            this.brush.extent([[0, 0], [width, height]]);
+            // Re-apply brush to ensure DOM elements exist
+            this.brushGroup.call(this.brush);
+        }
+        
+        // Always update brush styling
+        const brushG = this.brushGroup;
         
         // Style the brush overlay (makes it visible)
         brushG.select(".overlay")
@@ -1070,7 +1116,15 @@ export class Visual implements IVisual {
         this.selectedStartDate = this.xScale.invert(x0);
         this.selectedEndDate = this.xScale.invert(x1);
         
-        this.updateRangeDisplay();
+        // Debounce display update to reduce CPU usage during brushing
+        if (this.brushUpdateTimeout !== null) {
+            clearTimeout(this.brushUpdateTimeout);
+        }
+        
+        this.brushUpdateTimeout = setTimeout(() => {
+            this.updateRangeDisplay();
+            this.brushUpdateTimeout = null;
+        }, 16) as any; // ~60fps = 16ms
     }
 
     private onBrushEnd(event: d3.D3BrushEvent<unknown>): void {
@@ -1082,7 +1136,12 @@ export class Visual implements IVisual {
             this.updateRangeDisplay();
         }
         
-        // Apply filter
+        // Skip filter application if this is a programmatic update (prevents infinite loop)
+        if (this.isProgrammaticBrushUpdate) {
+            return;
+        }
+        
+        // Apply filter only for user-initiated brush changes
         if (this.selectedStartDate && this.selectedEndDate && this.filterColumnTarget) {
             try {
                 const delimiter = this.formattingSettings?.outputSettingsCard?.delimiter?.value ?? "|";
@@ -1131,9 +1190,17 @@ export class Visual implements IVisual {
         const x0 = this.xScale(this.selectedStartDate);
         const x1 = this.xScale(this.selectedEndDate);
         
+        // Set flag to prevent filter application during programmatic update
+        this.isProgrammaticBrushUpdate = true;
+        
         // Use call with the brush.move to set initial selection
         this.brushGroup.call(this.brush.move as any, [x0, x1]);
         this.updateRangeDisplay();
+        
+        // Reset flag after a short delay to allow event handlers to complete
+        setTimeout(() => {
+            this.isProgrammaticBrushUpdate = false;
+        }, 50);
     }
 
     private updateRangeDisplay(): void {
@@ -1154,7 +1221,13 @@ export class Visual implements IVisual {
     }
 
     private createDateFormatter(format: string): (date: Date) => string {
-        return (date: Date) => {
+        // Check cache first
+        if (this.dateFormatterCache.has(format)) {
+            return this.dateFormatterCache.get(format)!;
+        }
+        
+        // Create new formatter
+        const formatter = (date: Date) => {
             const pad = (n: number, len: number = 2) => n.toString().padStart(len, "0");
             
             const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -1184,9 +1257,49 @@ export class Visual implements IVisual {
             
             return result;
         };
+        
+        // Cache the formatter for reuse
+        this.dateFormatterCache.set(format, formatter);
+        return formatter;
     }
 
     public getFormattingModel(): powerbi.visuals.FormattingModel {
         return this.formattingSettingsService.buildFormattingModel(this.formattingSettings);
+    }
+    
+    public destroy(): void {
+        // Clear any pending timeouts
+        if (this.brushUpdateTimeout !== null) {
+            clearTimeout(this.brushUpdateTimeout);
+            this.brushUpdateTimeout = null;
+        }
+        
+        // Clean up event listeners to prevent memory leaks
+        if (this.svgContainer && this.contextMenuHandler) {
+            this.svgContainer.removeEventListener("contextmenu", this.contextMenuHandler);
+        }
+        
+        // Remove brush event handlers
+        if (this.brush) {
+            this.brush.on("brush", null);
+            this.brush.on("end", null);
+        }
+        
+        // Clear D3 selections to help garbage collection
+        if (this.svg) {
+            this.svg.selectAll("*").remove();
+        }
+        
+        // Clear data references
+        this.data = [];
+        this.dataView = null;
+        
+        // Clear caches
+        this.dateFormatterCache.clear();
+        
+        // Nullify references to help GC
+        this.xScale = null as any;
+        this.yScale = null as any;
+        this.brush = null as any;
     }
 }

@@ -1,0 +1,3 @@
+﻿"Tag","Plant","Factory","Line","Station","TagName","Metric","Description","EngUnits"
+"283eebcb-d267-4a76-8179-a9b33fb87cf2","Contoso Plant 1","Factory1","Line1","Station3","temperature-16","temperature","A temperature sensor","°C"
+"f6efb480-66a4-475a-84b5-87515cc75e2e","Contoso Plant 2","Factory2","Line1","Station5","temperature-17","temperature","A temperature sensor","°C"
