@@ -312,7 +312,7 @@
             }
         },
         "displaySettings": {
-            "displayName": "Display Settings",
+            "displayName": "Selection Display Settings",
             "properties": {
                 "showSelectedRange": {
                     "displayName": "Show Selected Range",
@@ -346,6 +346,30 @@
                         "numeric": true
                     }
                 },
+                "bold": {
+                    "displayName": "Bold",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "italic": {
+                    "displayName": "Italic",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "underline": {
+                    "displayName": "Underline",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "letterSpacing": {
+                    "displayName": "Letter Spacing",
+                    "type": {
+                        "numeric": true
+                    }
+                },
                 "fontColor": {
                     "displayName": "Font Color",
                     "type": {
@@ -372,6 +396,30 @@
                         "formatting": {
                             "alignment": true
                         }
+                    }
+                },
+                "rangeTextMarginTop": {
+                    "displayName": "Margin Top",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "rangeTextMarginRight": {
+                    "displayName": "Margin Right",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "rangeTextMarginBottom": {
+                    "displayName": "Margin Bottom",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "rangeTextMarginLeft": {
+                    "displayName": "Margin Left",
+                    "type": {
+                        "numeric": true
                     }
                 }
             }
@@ -404,6 +452,86 @@
             "properties": {
                 "fill": {
                     "displayName": "Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "legend": {
+            "displayName": "Legend",
+            "properties": {
+                "show": {
+                    "displayName": "Show Legend",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "position": {
+                    "displayName": "Position",
+                    "type": {
+                        "enumeration": [
+                            {
+                                "value": "top",
+                                "displayName": "Top"
+                            },
+                            {
+                                "value": "bottom",
+                                "displayName": "Bottom"
+                            },
+                            {
+                                "value": "left",
+                                "displayName": "Left"
+                            },
+                            {
+                                "value": "right",
+                                "displayName": "Right"
+                            }
+                        ]
+                    }
+                },
+                "showTitle": {
+                    "displayName": "Show Title",
+                    "type": {
+                        "bool": true
+                    }
+                },
+                "legendTitle": {
+                    "displayName": "Legend Title",
+                    "type": {
+                        "text": true
+                    }
+                },
+                "fontFamily": {
+                    "displayName": "Font Family",
+                    "type": {
+                        "formatting": {
+                            "fontFamily": true
+                        }
+                    }
+                },
+                "fontSize": {
+                    "displayName": "Font Size",
+                    "type": {
+                        "numeric": true
+                    }
+                },
+                "fontColor": {
+                    "displayName": "Font Color",
+                    "type": {
+                        "fill": {
+                            "solid": {
+                                "color": true
+                            }
+                        }
+                    }
+                },
+                "backgroundColor": {
+                    "displayName": "Background Color",
                     "type": {
                         "fill": {
                             "solid": {

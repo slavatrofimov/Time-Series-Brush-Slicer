@@ -51,6 +51,7 @@ export class Visual implements IVisual {
     private brushGroup: d3.Selection<SVGGElement, unknown, null, undefined>;
     private markersGroup: d3.Selection<SVGGElement, unknown, null, undefined>;
     private axisGroup: d3.Selection<SVGGElement, unknown, null, undefined>;
+    private legendGroup: d3.Selection<SVGGElement, unknown, null, undefined>;
     
     private formattingSettings: VisualFormattingSettingsModel;
     private formattingSettingsService: FormattingSettingsService;
@@ -109,7 +110,6 @@ export class Visual implements IVisual {
         this.rangeDisplay = document.createElement("div");
         this.rangeDisplay.style.cssText = `
             text-align: center;
-            padding: 8px 12px;
             background-color: #f0f0f0;
             border-bottom: 1px solid #ddd;
             font-size: 12px;
@@ -144,6 +144,7 @@ export class Visual implements IVisual {
         this.brushGroup = this.svg.append("g").attr("class", "brush-group");
         this.markersGroup = this.svg.append("g").attr("class", "markers-group");
         this.axisGroup = this.svg.append("g").attr("class", "axis-group");
+        this.legendGroup = this.svg.append("g").attr("class", "legend-group");
         
         // Create and bind context menu handler (stored for cleanup)
         this.contextMenuHandler = (e: MouseEvent) => {
@@ -215,10 +216,14 @@ export class Visual implements IVisual {
                 this.formattingSettings.lineSettingsCard.visible = false;
                 this.formattingSettings.areaSettingsCard.areaColor.visible = false;
                 this.formattingSettings.seriesSettingsCard.visible = true;
+                // Always keep legend visible to preserve settings
+                // this.formattingSettings.legendSettingsCard.visible = true;
             } else {
                 this.formattingSettings.lineSettingsCard.visible = true;
                 this.formattingSettings.areaSettingsCard.areaColor.visible = true;
                 this.formattingSettings.seriesSettingsCard.visible = false;
+                // Keep legend card visible even for single series to preserve settings
+                // this.formattingSettings.legendSettingsCard.visible = false;
             }
         }
 
@@ -323,10 +328,21 @@ export class Visual implements IVisual {
         const fontFamily = this.formattingSettings?.displaySettingsCard?.fontFamily?.value ?? "Segoe UI, wf_segoe-ui_normal, helvetica, arial, sans-serif";
         const alignment = this.formattingSettings?.displaySettingsCard?.alignment?.value ?? "center";
         
+        // Get font styling directly from toggle switches
+        const bold = this.formattingSettings?.displaySettingsCard?.bold?.value ?? false;
+        const italic = this.formattingSettings?.displaySettingsCard?.italic?.value ?? false;
+        const underline = this.formattingSettings?.displaySettingsCard?.underline?.value ?? false;
+        
+        const letterSpacing = this.formattingSettings?.displaySettingsCard?.letterSpacing?.value ?? 0;
+        
         this.rangeDisplay.style.backgroundColor = bgColor;
         this.rangeDisplay.style.color = fontColor;
         this.rangeDisplay.style.fontSize = `${fontSize}px`;
         this.rangeDisplay.style.fontFamily = fontFamily;
+        this.rangeDisplay.style.fontWeight = bold ? "bold" : "normal";
+        this.rangeDisplay.style.fontStyle = italic ? "italic" : "normal";
+        this.rangeDisplay.style.textDecoration = underline ? "underline" : "none";
+        this.rangeDisplay.style.letterSpacing = `${letterSpacing}px`;
         this.rangeDisplay.style.textAlign = alignment;
         
         const rangeMarginTop = this.formattingSettings?.displaySettingsCard?.rangeTextMarginTop?.value ?? 0;
@@ -334,7 +350,8 @@ export class Visual implements IVisual {
         const rangeMarginBottom = this.formattingSettings?.displaySettingsCard?.rangeTextMarginBottom?.value ?? 0;
         const rangeMarginLeft = this.formattingSettings?.displaySettingsCard?.rangeTextMarginLeft?.value ?? 5;
 
-        this.rangeDisplay.style.padding = `${rangeMarginTop}px ${rangeMarginRight}px ${rangeMarginBottom}px ${rangeMarginLeft}px`;
+        this.rangeDisplay.style.padding = "0";
+        this.rangeDisplay.style.margin = `${rangeMarginTop}px ${rangeMarginRight}px ${rangeMarginBottom}px ${rangeMarginLeft}px`;
         
         this.rangeDisplay.style.borderBottom = "1px solid #ddd";
         this.svgContainer.style.display = "block";
@@ -499,46 +516,68 @@ export class Visual implements IVisual {
                 }
             }
             
-            // Line - group consecutive segments by color for better performance
-            const colorSegments = new Map<string, Array<{x: number, y: number}>>();
+            // Line - group consecutive segments by color, breaking on null values (gaps)
+            // Structure: Map<color, Array<Array<point>>> where inner arrays are continuous segments
+            const colorSegments = new Map<string, Array<Array<{x: number, y: number}>>>();
             
             for (let i = 0; i < points.length; i++) {
                 const p = points[i];
                 
-                // Skip null values
+                // Null values create breaks in the line
                 if (p.value === null || p.value === undefined) {
-                    continue;
+                    continue; // This creates the gap by not connecting to next point
                 }
                 
                 // Get color for this point
                 const color = p.lineColor || defaultLineColor;
                 
-                // Add point to the appropriate color segment
+                // Initialize color segments if needed
                 if (!colorSegments.has(color)) {
-                    colorSegments.set(color, []);
+                    colorSegments.set(color, [[]]);
                 }
-                colorSegments.get(color)!.push({
+                
+                const segments = colorSegments.get(color)!;
+                let currentSegment = segments[segments.length - 1];
+                
+                // Check if previous point was null (or this is first point)
+                const prevPoint = i > 0 ? points[i - 1] : null;
+                const isPrevNull = !prevPoint || prevPoint.value === null || prevPoint.value === undefined;
+                const isPrevDifferentColor = prevPoint && prevPoint.lineColor && prevPoint.lineColor !== color;
+                
+                // Start new segment if previous point was null or different color
+                if (isPrevNull || isPrevDifferentColor) {
+                    if (currentSegment.length > 0) {
+                        // Create new segment
+                        currentSegment = [];
+                        segments.push(currentSegment);
+                    }
+                }
+                
+                // Add point to current segment
+                currentSegment.push({
                     x: this.xScale(p.timestamp),
                     y: yScale(p.value!)
                 });
             }
             
-            // Render each color segment as a single path
-            colorSegments.forEach((pathPoints, color) => {
-                if (pathPoints.length < 2) return; // Need at least 2 points for a line
-                
-                // Build path data string
-                let pathData = `M ${pathPoints[0].x} ${pathPoints[0].y}`;
-                for (let i = 1; i < pathPoints.length; i++) {
-                    pathData += ` L ${pathPoints[i].x} ${pathPoints[i].y}`;
-                }
-                
-                this.chartGroup.append("path")
-                    .attr("d", pathData)
-                    .attr("stroke", color)
-                    .attr("stroke-width", lineWidth)
-                    .attr("stroke-linecap", "round")
-                    .attr("fill", "none");
+            // Render each color's segments as separate paths
+            colorSegments.forEach((segments, color) => {
+                segments.forEach(pathPoints => {
+                    if (pathPoints.length < 2) return; // Need at least 2 points for a line
+                    
+                    // Build path data string
+                    let pathData = `M ${pathPoints[0].x} ${pathPoints[0].y}`;
+                    for (let i = 1; i < pathPoints.length; i++) {
+                        pathData += ` L ${pathPoints[i].x} ${pathPoints[i].y}`;
+                    }
+                    
+                    this.chartGroup.append("path")
+                        .attr("d", pathData)
+                        .attr("stroke", color)
+                        .attr("stroke-width", lineWidth)
+                        .attr("stroke-linecap", "round")
+                        .attr("fill", "none");
+                });
             });
         });
         
@@ -650,6 +689,7 @@ export class Visual implements IVisual {
 
         this.renderAxis(showAxis, chartWidth);
         this.setupBrush(chartWidth, chartHeight);
+        this.renderLegend(isMultiSeries, seriesGroups, width, height, rangeHeight);
         
         // Initialize or restore selection
         if (this.selectedStartDate && this.selectedEndDate) {
@@ -1043,6 +1083,105 @@ export class Visual implements IVisual {
             .style("stroke", isHighContrast ? foreground : "#ccc");
         this.axisGroup.select(".domain")
             .style("stroke", isHighContrast ? foreground : "#999");
+    }
+
+    private renderLegend(isMultiSeries: boolean, seriesGroups: Map<string, TimeDataPoint[]>, width: number, height: number, rangeHeight: number): void {
+        this.legendGroup.selectAll("*").remove();
+        
+        // Only show legend for multi-series or if explicitly enabled
+        const showLegend = this.formattingSettings?.legendSettingsCard?.show?.value ?? true;
+        if (!showLegend || !isMultiSeries || seriesGroups.size === 0) {
+            return;
+        }
+        
+        const position = this.formattingSettings?.legendSettingsCard?.position?.value?.value ?? "top";
+        const showTitle = this.formattingSettings?.legendSettingsCard?.showTitle?.value ?? true;
+        const legendTitle = this.formattingSettings?.legendSettingsCard?.legendTitle?.value ?? "Series";
+        const fontSize = this.formattingSettings?.legendSettingsCard?.fontSize?.value ?? 10;
+        const fontFamily = this.formattingSettings?.legendSettingsCard?.fontFamily?.value ?? "Segoe UI, wf_segoe-ui_normal, helvetica, arial, sans-serif";
+        const fontColor = this.formattingSettings?.legendSettingsCard?.fontColor?.value?.value ?? "#666666";
+        const backgroundColor = this.formattingSettings?.legendSettingsCard?.backgroundColor?.value?.value ?? "transparent";
+        
+        const seriesNames = Array.from(seriesGroups.keys());
+        const itemHeight = fontSize + 4;
+        const markerSize = Math.min(fontSize, 12);
+        const markerPadding = 5;
+        
+        let legendX = 0;
+        let legendY = 0;
+        let currentY = showTitle ? itemHeight + 5 : 5;
+        
+        // Position legend based on settings
+        if (position === "top") {
+            legendX = this.margin.left;
+            legendY = this.margin.top;
+        } else if (position === "bottom") {
+            legendX = this.margin.left;
+            legendY = height - rangeHeight - 30; // Account for axis
+        } else if (position === "left") {
+            legendX = 5;
+            legendY = this.margin.top + (height - rangeHeight) / 2 - (seriesNames.length * itemHeight) / 2;
+        } else if (position === "right") {
+            legendX = width - 120;
+            legendY = this.margin.top + (height - rangeHeight) / 2 - (seriesNames.length * itemHeight) / 2;
+        }
+        
+        this.legendGroup.attr("transform", `translate(${legendX}, ${legendY})`);
+        
+        // Add background if not transparent
+        if (backgroundColor !== "transparent") {
+            const bgWidth = position === "top" || position === "bottom" ? width - this.margin.left - this.margin.right : 120;
+            const bgHeight = (showTitle ? itemHeight + 5 : 0) + seriesNames.length * itemHeight + 10;
+            
+            this.legendGroup.append("rect")
+                .attr("width", bgWidth)
+                .attr("height", bgHeight)
+                .attr("fill", backgroundColor)
+                .attr("opacity", 0.8);
+        }
+        
+        // Add title if enabled
+        if (showTitle) {
+            this.legendGroup.append("text")
+                .attr("x", 5)
+                .attr("y", fontSize + 2)
+                .style("font-size", `${fontSize}px`)
+                .style("font-family", fontFamily)
+                .style("font-weight", "bold")
+                .style("fill", fontColor)
+                .text(legendTitle);
+        }
+        
+        // Add legend items
+        seriesNames.forEach((seriesName, index) => {
+            const itemY = currentY + index * itemHeight;
+            
+            // Get series color
+            const seriesSlice = this.formattingSettings.seriesSettingsCard.slices.find(s => s.displayName === seriesName) as formattingSettings.ColorPicker;
+            let seriesColor: string;
+            if (seriesSlice && seriesSlice.value) {
+                seriesColor = seriesSlice.value.value;
+            } else {
+                seriesColor = this.host.colorPalette.getColor(seriesName).value;
+            }
+            
+            // Draw color marker (square)
+            this.legendGroup.append("rect")
+                .attr("x", 5)
+                .attr("y", itemY - markerSize / 2)
+                .attr("width", markerSize)
+                .attr("height", markerSize)
+                .attr("fill", seriesColor);
+            
+            // Draw series name
+            this.legendGroup.append("text")
+                .attr("x", 5 + markerSize + markerPadding)
+                .attr("y", itemY + fontSize / 2 - 1)
+                .style("font-size", `${fontSize}px`)
+                .style("font-family", fontFamily)
+                .style("fill", fontColor)
+                .text(seriesName);
+        });
     }
 
     private setupBrush(width: number, height: number): void {

@@ -104,8 +104,8 @@ class LineSettingsCard extends FormattingSettingsCard {
 
     lineWidth = new formattingSettings.NumUpDown({
         name: "lineWidth",
-        displayName: "Line Width",
-        description: "Width of the line",
+        displayName: "Line Width (px)",
+        description: "Width of the line in pixels",
         value: 1.5,
         options: {
             minValue: {
@@ -242,7 +242,7 @@ class MarginSettingsCard extends FormattingSettingsCard {
             },
             maxValue: {
                 type: powerbi.visuals.ValidatorType.Max,
-                value: 200
+                value: 100
             }
         }
     });
@@ -250,7 +250,7 @@ class MarginSettingsCard extends FormattingSettingsCard {
     marginRight = new formattingSettings.NumUpDown({
         name: "marginRight",
         displayName: "Right (px)",
-        value: 5,
+        value: 0,
         options: {
             minValue: {
                 type: powerbi.visuals.ValidatorType.Min,
@@ -258,7 +258,7 @@ class MarginSettingsCard extends FormattingSettingsCard {
             },
             maxValue: {
                 type: powerbi.visuals.ValidatorType.Max,
-                value: 200
+                value: 100
             }
         }
     });
@@ -274,7 +274,7 @@ class MarginSettingsCard extends FormattingSettingsCard {
             },
             maxValue: {
                 type: powerbi.visuals.ValidatorType.Max,
-                value: 200
+                value: 100
             }
         }
     });
@@ -282,7 +282,7 @@ class MarginSettingsCard extends FormattingSettingsCard {
     marginLeft = new formattingSettings.NumUpDown({
         name: "marginLeft",
         displayName: "Left (px)",
-        value: 5,
+        value: 0,
         options: {
             minValue: {
                 type: powerbi.visuals.ValidatorType.Min,
@@ -290,7 +290,7 @@ class MarginSettingsCard extends FormattingSettingsCard {
             },
             maxValue: {
                 type: powerbi.visuals.ValidatorType.Max,
-                value: 200
+                value: 100
             }
         }
     });
@@ -365,6 +365,50 @@ class DisplaySettingsCard extends FormattingSettingsCard {
         displayName: "Font Color",
         description: "Color of the selected range text",
         value: { value: "#333333" }
+    });
+
+    bold = new formattingSettings.ToggleSwitch({
+        name: "bold",
+        displayName: "Bold",
+        value: false
+    });
+
+    italic = new formattingSettings.ToggleSwitch({
+        name: "italic",
+        displayName: "Italic",
+        value: false
+    });
+
+    underline = new formattingSettings.ToggleSwitch({
+        name: "underline",
+        displayName: "Underline",
+        value: false
+    });
+
+    fontControl = new formattingSettings.FontControl({
+        name: "fontControl",
+        fontFamily: this.fontFamily,
+        fontSize: this.fontSize,
+        bold: this.bold,
+        italic: this.italic,
+        underline: this.underline
+    });
+
+    letterSpacing = new formattingSettings.NumUpDown({
+        name: "letterSpacing",
+        displayName: "Letter Spacing",
+        description: "Spacing between letters in pixels",
+        value: 0,
+        options: {
+            minValue: {
+                type: powerbi.visuals.ValidatorType.Min,
+                value: -2
+            },
+            maxValue: {
+                type: powerbi.visuals.ValidatorType.Max,
+                value: 10
+            }
+        }
     });
 
     backgroundColor = new formattingSettings.ColorPicker({
@@ -456,14 +500,14 @@ class DisplaySettingsCard extends FormattingSettingsCard {
     });
 
     name: string = "displaySettings"; // Keeping the name consistent
-    displayName: string = "Display Settings";
+    displayName: string = "Selection Display Settings";
     
     slices: Array<FormattingSettingsSlice> = [
         this.showSelectedRange, 
         this.prefix,
-        this.dateFormat, 
-        this.fontFamily,
-        this.fontSize, 
+        this.dateFormat,
+        this.fontControl,
+        this.letterSpacing,
         this.fontColor, 
         this.backgroundColor, 
         this.alignment,
@@ -659,6 +703,92 @@ class SeriesSettingsCard extends FormattingSettingsCard {
 }
 
 /**
+ * Legend Settings Card
+ */
+class LegendSettingsCard extends FormattingSettingsCard {
+    show = new formattingSettings.ToggleSwitch({
+        name: "show",
+        displayName: "Show Legend",
+        description: "Display legend for multiple series",
+        value: true
+    });
+
+    position = new formattingSettings.ItemDropdown({
+        name: "position",
+        displayName: "Position",
+        items: [
+            { value: "top", displayName: "Top" },
+            { value: "bottom", displayName: "Bottom" },
+            { value: "left", displayName: "Left" },
+            { value: "right", displayName: "Right" }
+        ],
+        value: { value: "top", displayName: "Top" }
+    });
+
+    showTitle = new formattingSettings.ToggleSwitch({
+        name: "showTitle",
+        displayName: "Show Title",
+        description: "Display legend title",
+        value: true
+    });
+
+    legendTitle = new formattingSettings.TextInput({
+        name: "legendTitle",
+        displayName: "Legend Title",
+        description: "Text for legend title",
+        value: "Series",
+        placeholder: "Series"
+    });
+
+    fontFamily = new formattingSettings.FontPicker({
+        name: "fontFamily",
+        displayName: "Font Family",
+        value: "Segoe UI, wf_segoe-ui_normal, helvetica, arial, sans-serif"
+    });
+
+    fontSize = new formattingSettings.NumUpDown({
+        name: "fontSize",
+        displayName: "Font Size",
+        value: 10,
+        options: {
+            minValue: {
+                type: powerbi.visuals.ValidatorType.Min,
+                value: 8
+            },
+            maxValue: {
+                type: powerbi.visuals.ValidatorType.Max,
+                value: 20
+            }
+        }
+    });
+
+    fontColor = new formattingSettings.ColorPicker({
+        name: "fontColor",
+        displayName: "Font Color",
+        value: { value: "#666666" }
+    });
+
+    backgroundColor = new formattingSettings.ColorPicker({
+        name: "backgroundColor",
+        displayName: "Background Color",
+        value: { value: "transparent" }
+    });
+
+    name: string = "legend";
+    displayName: string = "Legend";
+    slices: Array<FormattingSettingsSlice> = [
+        this.show,
+        this.position,
+        this.showTitle,
+        this.legendTitle,
+        this.fontFamily,
+        this.fontSize,
+        this.fontColor,
+        this.backgroundColor
+    ];
+}
+
+/**
  * Output Settings Card - Controls the text output format
  */
 class OutputSettingsCard extends FormattingSettingsCard {
@@ -701,6 +831,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
     yAxisSettingsCard = new YAxisSettingsCard();
     marginSettingsCard = new MarginSettingsCard();
     seriesSettingsCard = new SeriesSettingsCard();
+    legendSettingsCard = new LegendSettingsCard();
     displaySettingsCard = new DisplaySettingsCard();
     outputSettingsCard = new OutputSettingsCard();
     anomaliesSettingsCard = new AnomaliesSettingsCard();
@@ -714,6 +845,7 @@ export class VisualFormattingSettingsModel extends FormattingSettingsModel {
         this.yAxisSettingsCard,
         this.marginSettingsCard,
         this.seriesSettingsCard,
+        this.legendSettingsCard,
         this.displaySettingsCard, 
         this.outputSettingsCard,
         this.anomaliesSettingsCard,
