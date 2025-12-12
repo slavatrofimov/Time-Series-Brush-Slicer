@@ -1,0 +1,4 @@
+relationship e62a7990-0179-9e54-64a3-5dcda0be8a5c
+	fromColumn: 'Time Brush 1'.tag
+	toColumn: 'Tag Metadata'.Tag
+

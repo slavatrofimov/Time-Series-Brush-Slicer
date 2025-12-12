@@ -1,0 +1,73 @@
+table 'Time Brush 1'
+	lineageTag: 2c16e572-5ae3-47af-a82b-4bc9eb2e58d4
+
+	column timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 80fcbcef-707c-49ae-8602-4167798f6aaa
+		summarizeBy: none
+		sourceColumn: timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column tag
+		dataType: string
+		lineageTag: 5440f8e0-db04-4c68-b71c-f7f2fc67c886
+		summarizeBy: none
+		sourceColumn: tag
+
+		annotation SummarizationSetBy = Automatic
+
+	column value
+		dataType: double
+		lineageTag: 771017d1-31ab-46cd-81f6-e043dc83bbe4
+		summarizeBy: sum
+		sourceColumn: value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column anomaly
+		dataType: double
+		lineageTag: 511c033a-920b-4b18-bb93-e85e18e8502b
+		summarizeBy: sum
+		sourceColumn: anomaly
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column timeline_marker
+		dataType: string
+		lineageTag: aa4d0bea-7b72-414a-8c85-611cd816f600
+		summarizeBy: none
+		sourceColumn: timeline_marker
+
+		annotation SummarizationSetBy = Automatic
+
+	column color
+		dataType: double
+		lineageTag: 720db27d-86b8-40df-92cb-85044dac17a9
+		summarizeBy: sum
+		sourceColumn: color
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Time Brush 1' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\GitHub\Time-Series-Brush-Slicer\examples\Sample Data\Time Brush Source.csv"),[Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Use First Row as Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Use First Row as Headers",{{"value", type number}, {"color", type number}, {"anomaly", type number}, {"timestamp", type datetime}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type","",null,Replacer.ReplaceValue,{"timeline_marker"})
+				in
+				    #"Replaced Value"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

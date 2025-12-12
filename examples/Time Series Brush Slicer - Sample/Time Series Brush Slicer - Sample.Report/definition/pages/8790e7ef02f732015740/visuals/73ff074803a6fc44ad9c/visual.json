@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.4.0/schema.json",
+  "name": "73ff074803a6fc44ad9c",
+  "position": {
+    "x": 10.746268656716417,
+    "y": 20.597014925373134,
+    "z": 2000,
+    "height": 46.567164179104473,
+    "width": 1260.8955223880596,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Time Series Brush Slicer Examples",
+                    "textStyle": {
+                      "fontSize": "20pt",
+                      "color": "#336c75"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

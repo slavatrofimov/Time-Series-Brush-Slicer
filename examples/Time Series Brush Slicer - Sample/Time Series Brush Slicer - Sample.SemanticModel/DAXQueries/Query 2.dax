@@ -1,0 +1,54 @@
+DEFINE
+	VAR __DS0FilterTable = 
+		TREATAS({"Contoso Plant 1"}, 'Tag Metadata'[Plant])
+
+	VAR __DS0Core = 
+		SUMMARIZECOLUMNS(
+			'Time Brush'[timestamp],
+			'Time Brush'[time_brush_range_input],
+			'Time Brush'[tag],
+			__DS0FilterTable,
+			"Maxanomaly", CALCULATE(MAX('Time Brush'[anomaly])),
+			"Averagevalue", CALCULATE(AVERAGE('Time Brush'[value])),
+			"Mintimeline_marker", CALCULATE(MIN('Time Brush'[timeline_marker]))
+		)
+
+	VAR __DS0PrimaryWindowed = 
+		TOPN(
+			501,
+			SUMMARIZE(__DS0Core, 'Time Brush'[timestamp], 'Time Brush'[time_brush_range_input]),
+			'Time Brush'[timestamp],
+			1,
+			'Time Brush'[time_brush_range_input],
+			1
+		)
+
+	VAR __DS0SecondaryBase = 
+		SUMMARIZE(__DS0Core, 'Time Brush'[tag])
+
+	VAR __DS0Secondary = 
+		TOPN(62, __DS0SecondaryBase, 'Time Brush'[tag], 1)
+
+	VAR __DS0BodyLimited = 
+		NATURALLEFTOUTERJOIN(
+			__DS0PrimaryWindowed,
+			SUBSTITUTEWITHINDEX(
+				__DS0Core,
+				"ColumnIndex",
+				__DS0Secondary,
+				'Time Brush'[tag],
+				ASC
+			)
+		)
+
+EVALUATE
+	__DS0Secondary
+
+ORDER BY
+	'Time Brush'[tag]
+
+EVALUATE
+	__DS0BodyLimited
+
+ORDER BY
+	'Time Brush'[timestamp], 'Time Brush'[time_brush_range_input], [ColumnIndex]

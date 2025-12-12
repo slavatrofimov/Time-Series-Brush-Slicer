@@ -1,0 +1,89 @@
+table 'Tag Metadata'
+	lineageTag: b2883c51-ba99-4fe4-ae72-47c752386422
+
+	column Tag
+		dataType: string
+		lineageTag: f55d8852-fd54-4fde-96c5-ef054896a2ad
+		summarizeBy: none
+		sourceColumn: Tag
+
+		annotation SummarizationSetBy = Automatic
+
+	column Plant
+		dataType: string
+		lineageTag: 10fb098d-28e1-482b-afa7-1ebf360d88c0
+		summarizeBy: none
+		sourceColumn: Plant
+
+		annotation SummarizationSetBy = Automatic
+
+	column Factory
+		dataType: string
+		lineageTag: 818aa414-75b9-4c45-81d0-a2fc85992b6e
+		summarizeBy: none
+		sourceColumn: Factory
+
+		annotation SummarizationSetBy = Automatic
+
+	column Line
+		dataType: string
+		lineageTag: 157fbf6a-6801-4140-a50d-996e259d2169
+		summarizeBy: none
+		sourceColumn: Line
+
+		annotation SummarizationSetBy = Automatic
+
+	column Station
+		dataType: string
+		lineageTag: 822f17ee-40d9-416e-9750-86fc3bda7de8
+		summarizeBy: none
+		sourceColumn: Station
+
+		annotation SummarizationSetBy = Automatic
+
+	column TagName
+		dataType: string
+		lineageTag: 9f861054-18da-42cf-babe-85aff274b0ff
+		summarizeBy: none
+		sourceColumn: TagName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Metric
+		dataType: string
+		lineageTag: 6f7348f6-d28f-42e9-b4c6-bae247c60d1d
+		summarizeBy: none
+		sourceColumn: Metric
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: 509f12c5-e22c-452a-bbef-e0c920750d76
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column EngUnits
+		dataType: string
+		lineageTag: 3da92108-495d-4b89-a9dd-e6790d45c1c7
+		summarizeBy: none
+		sourceColumn: EngUnits
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Tag Metadata' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\GitHub\Time-Series-Brush-Slicer\examples\Sample Data\Tag Metadata Source.csv"),[Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Tag", type text}, {"Plant", type text}, {"Factory", type text}, {"Line", type text}, {"Station", type text}, {"TagName", type text}, {"Metric", type text}, {"Description", type text}, {"EngUnits", type text}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
