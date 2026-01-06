@@ -1,0 +1,120 @@
+table 'Time Brush'
+	lineageTag: 2d446c52-05d8-41bd-a95d-e02527d74091
+
+	column timestamp
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetimeoffset
+		lineageTag: a1340dbf-b41b-467c-8f3f-529f8d591dd2
+		summarizeBy: none
+		sourceColumn: timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column tag
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: c9c7d2b2-aeb4-4fa6-9ba5-a96bd2adb1eb
+		summarizeBy: none
+		sourceColumn: tag
+
+		annotation SummarizationSetBy = Automatic
+
+	column anomaly
+		dataType: double
+		sourceProviderType: double
+		lineageTag: f7ec6d41-2355-44e1-8119-2596468aebe7
+		summarizeBy: sum
+		sourceColumn: anomaly
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column value
+		dataType: double
+		sourceProviderType: double
+		lineageTag: 78458280-7824-46fd-b62f-dbe9590d1443
+		summarizeBy: sum
+		sourceColumn: value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column timeline_marker
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 5ac86c7f-f83d-4b42-b71d-98eab5bd388f
+		summarizeBy: none
+		sourceColumn: timeline_marker
+
+		annotation SummarizationSetBy = Automatic
+
+	column time_brush_range_input
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 5a5ee78c-bc6c-4452-99b6-2119891a7e53
+		summarizeBy: none
+		sourceColumn: time_brush_range_input
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 2,
+				  "kind": 1,
+				  "selectAllValue": "__SelectAll__"
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Time Brush' = m
+		mode: directQuery
+		source = ```
+				let
+				    time_range = f_calculate_time_range(p_relative_time_period, p_start_date, p_end_date, p_anchor_date),
+				    Query = "
+				    let start = todatetime('" & DateTime.ToText(time_range[Start]) & "');
+				    let end = todatetime('" & DateTime.ToText(time_range[End]) & "');
+				    let bin_timespan = totimespan('" & f_bin_timespan(p_relative_time_period, p_start_date, p_end_date, p_preferred_bin_timespan, p_max_bins, p_anchor_date) & "');
+				    let tags = TimeseriesMetadata | where TimeseriesName in (" & f_parse_tags(p_tags) & ") | project TimeseriesId;
+				    //Hard-coding a few markers for illustrative purposes -- in practice they should be retrieved from the database
+				    let Markers_Base = datatable (Timestamp: datetime , Description: string )
+				        [
+				            '2017-04-08 21:30', 'Experimental production batch started',
+				            '2017-04-18 09:00', 'Experimental production batch completed',
+				            '2017-04-27 18:00', 'Replaced filters.'
+				        ]
+				        | where Timestamp  between (start .. end)
+				        | extend Key = 1;
+				    let Markers = TimeseriesMetadata
+				        | project Key = 1, TimeseriesId
+				        | join kind=inner Markers_Base on Key
+				        | project-away Key, Key1
+				        | summarize TimelineMarker = max(Description) by bin(Timestamp, bin_timespan)
+				        | project TimelineMarker, timestamp = Timestamp;   
+				    Timeseries
+				    | project tag = TimeseriesId, timestamp = Timestamp, value = Value
+				    | where timestamp  between (start .. end)
+				    | where tag in (tags)
+				    | make-series value = " & p_aggregation & "(value) on timestamp step bin_timespan by tag
+				    | extend stats = series_stats_dynamic(value)  // returns dynamic object with mean, stdev, etc.
+				    | extend mean = todouble(stats.avg), stdev = todouble(stats.stdev)
+				    | extend centered = series_subtract(value, mean)  // subtract mean from each element
+				    | extend z_score = series_divide(centered, stdev) // divide by stdev
+				    | project tag, timestamp, z_score
+				    | extend anomaly = series_decompose_anomalies(z_score, 1.5, -1, 'linefit')
+				    | mv-expand timestamp, z_score, anomaly
+				    | project todatetime(timestamp), tostring(tag), todouble(z_score), anomaly = todouble(anomaly)
+				    | project timestamp, tag, z_score, anomaly = iif(anomaly != 0, z_score, double(null))
+				    | union Markers
+				    | project timestamp, tag, value = z_score, anomaly, timeline_marker = TimelineMarker, time_brush_range_input = ''
+				    ",
+				    Source = AzureDataExplorer.Contents(p_kql_cluster, p_kql_db, Query, [MaxRows=null, MaxSize=null, NoTruncate=null, AdditionalSetStatements=null])
+				in
+				    Source
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

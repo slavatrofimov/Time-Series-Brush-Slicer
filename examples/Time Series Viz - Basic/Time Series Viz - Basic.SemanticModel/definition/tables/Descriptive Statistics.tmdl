@@ -1,0 +1,113 @@
+table 'Descriptive Statistics'
+	lineageTag: 26db5ee4-2c7a-4799-acde-b4ef255fd66a
+
+	column TagName
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 87320a72-378e-43f3-866d-a0e36ffa9b51
+		summarizeBy: none
+		sourceColumn: TagName
+
+		annotation SummarizationSetBy = Automatic
+
+	column series_stats_Value_min
+		dataType: double
+		sourceProviderType: double
+		lineageTag: 5d5b21b1-4d94-41d5-8759-95b3bec565ae
+		summarizeBy: sum
+		sourceColumn: series_stats_Value_min
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column series_stats_Value_min_idx
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 630a9303-39ef-41f0-a51e-168048cb88e4
+		summarizeBy: sum
+		sourceColumn: series_stats_Value_min_idx
+
+		annotation SummarizationSetBy = Automatic
+
+	column series_stats_Value_max
+		dataType: double
+		sourceProviderType: double
+		lineageTag: 3126414f-f21c-475c-adb6-66efe922175a
+		summarizeBy: sum
+		sourceColumn: series_stats_Value_max
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column series_stats_Value_max_idx
+		dataType: int64
+		formatString: 0
+		sourceProviderType: bigint
+		lineageTag: 9e42c099-7608-463e-8b5f-82ac024c748f
+		summarizeBy: sum
+		sourceColumn: series_stats_Value_max_idx
+
+		annotation SummarizationSetBy = Automatic
+
+	column series_stats_Value_avg
+		dataType: double
+		sourceProviderType: double
+		lineageTag: 12d48d08-4e04-4b26-b531-875be26bda8b
+		summarizeBy: sum
+		sourceColumn: series_stats_Value_avg
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column series_stats_Value_stdev
+		dataType: double
+		sourceProviderType: double
+		lineageTag: 328332d4-fc66-4e11-bdd4-f8091a6d9ce9
+		summarizeBy: sum
+		sourceColumn: series_stats_Value_stdev
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column series_stats_Value_variance
+		dataType: double
+		sourceProviderType: double
+		lineageTag: e89fcca6-5c90-4579-b04b-cee6d4cfd21f
+		summarizeBy: sum
+		sourceColumn: series_stats_Value_variance
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Descriptive Statistics' = m
+		mode: directQuery
+		source =
+				let
+				    time_range = f_parse_time_brush_range(p_time_brush_range),
+				    start = time_range[Start],
+				    end = time_range[End],
+				    Query = "
+				    let start = todatetime('" & DateTime.ToText(start) & "');
+				    let end = todatetime('" & DateTime.ToText(end) & "');
+				    let bin_timespan = totimespan('" & f_bin_timespan("a - *custom*", start, end, p_preferred_bin_timespan, p_max_bins, null) & "');
+				    let tags = " & p_kql_query_tag_metadata & " | where TagName in (" & f_parse_tags(p_tags) & ");
+				    " & p_kql_query_timeseries & "
+				    | where Timestamp  between (start .. end)
+				    | where Tag in (tags | project Tag)
+				    | make-series Value = " & p_aggregation & "(Value) default = double(null) on Timestamp from start to end step bin_timespan by Tag
+				    | lookup kind=leftouter tags on Tag
+				    | project TagName, series_stats(Value)",
+				    Source = AzureDataExplorer.Contents(p_kql_cluster, p_kql_db, Query, [MaxRows=null, MaxSize=null, NoTruncate=null, AdditionalSetStatements=null])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

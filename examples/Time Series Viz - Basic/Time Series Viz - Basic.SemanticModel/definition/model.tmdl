@@ -1,0 +1,48 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup 'Inputs and Config Tables'
+
+	annotation PBI_QueryGroupOrder = 3
+
+queryGroup 'Do NOT modify these parameters'
+
+	annotation PBI_QueryGroupOrder = 1
+
+queryGroup 'Helper Functions'
+
+	annotation PBI_QueryGroupOrder = 2
+
+/// Group of parameters that must be configured or customized by the user.
+queryGroup 'Configure These Parameters'
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["Time Series Core","p_start_date","p_end_date","p_max_bins","p_preferred_bin_timespan","p_aggregation","DateInputs","TimeSpanOptions","RelativeTime","MaxBinsOptions","AggregationOptions","ChartConfig","p_tags","p_relative_time_period","Tags","p_anchor_date","Correlation Coefficients","Descriptive Statistics","p_time_brush_range","Time Brush","f_bin_timespan","f_parse_tags","p_kql_cluster","p_kql_db","p_kql_query_tag_metadata","p_kql_query_timeseries","f_calculate_time_range","f_parse_time_brush_range","Effective Time Grain"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'Time Series Core'
+ref table DateInputs
+ref table MaxBinsOptions
+ref table TimeSpanOptions
+ref table AggregationOptions
+ref table RelativeTime
+ref table Tags
+ref table SmallMultiplesConfig
+ref table ChartConfig
+ref table LegendConfig
+ref table 'Correlation Coefficients'
+ref table 'Descriptive Statistics'
+ref table 'Time Brush'
+ref table 'Effective Time Grain'
+
+ref cultureInfo en-US
+

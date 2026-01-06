@@ -1,0 +1,581 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "a8e5a2821f1ffa02f9f4",
+  "position": {
+    "x": 19.585958595859587,
+    "y": 154.3834383438344,
+    "z": 15000,
+    "height": 226.966696669667,
+    "width": 455.08550855085508,
+    "tabOrder": 14000
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Descriptive Statistics"
+                    }
+                  },
+                  "Property": "TagName"
+                }
+              },
+              "queryRef": "Descriptive Statistics.TagName",
+              "nativeQueryRef": "TagName"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Descriptive Statistics"
+                        }
+                      },
+                      "Property": "series_stats_Value_avg"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Sum(Descriptive Statistics.series_stats_Value_avg)",
+              "nativeQueryRef": "Average of series_stats_Value_avg1",
+              "displayName": "Average"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Descriptive Statistics"
+                        }
+                      },
+                      "Property": "series_stats_Value_min"
+                    }
+                  },
+                  "Function": 3
+                }
+              },
+              "queryRef": "Sum(Descriptive Statistics.series_stats_Value_min)",
+              "nativeQueryRef": "Min of series_stats_Value_min",
+              "displayName": "Min"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Descriptive Statistics"
+                        }
+                      },
+                      "Property": "series_stats_Value_max"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Sum(Descriptive Statistics.series_stats_Value_max)",
+              "nativeQueryRef": "Average of series_stats_Value_max1",
+              "displayName": "Max"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Descriptive Statistics"
+                        }
+                      },
+                      "Property": "series_stats_Value_stdev"
+                    }
+                  },
+                  "Function": 1
+                }
+              },
+              "queryRef": "Sum(Descriptive Statistics.series_stats_Value_stdev)",
+              "nativeQueryRef": "Average of series_stats_Value_stdev1",
+              "displayName": "StDev"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Descriptive Statistics"
+                  }
+                },
+                "Property": "tag"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "general": [
+        {
+          "properties": {}
+        }
+      ],
+      "grid": [
+        {
+          "properties": {
+            "gridVertical": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "rowPadding": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "74.33858267716535D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Correlation Coefficients"
+                          }
+                        },
+                        "Property": "tag1"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'MTR001-energy_delivered_kwh'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "58.55118110236221D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Correlation Coefficients"
+                          }
+                        },
+                        "Property": "tag1"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'MTR001-power_factor'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "56.54330708661417D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "scopeId": {
+                  "Comparison": {
+                    "ComparisonKind": 0,
+                    "Left": {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Correlation Coefficients"
+                          }
+                        },
+                        "Property": "tag1"
+                      }
+                    },
+                    "Right": {
+                      "Literal": {
+                        "Value": "'MTR003-power_factor'"
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "150D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Max(DynamicQueryCorrelation.correlation_coefficient)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "158D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "DynamicQueryStats.tag"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "134D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Descriptive Statistics.TagName"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "72.07330379793662D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(Descriptive Statistics.series_stats_Value_avg)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "76.98803637256854D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(Descriptive Statistics.series_stats_Value_max)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "76.32910925967113D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(Descriptive Statistics.series_stats_Value_stdev)"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "68.32910242786238D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(Descriptive Statistics.series_stats_Value_min)"
+          }
+        }
+      ],
+      "values": [
+        {
+          "properties": {
+            "backColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "FillRule": {
+                      "Input": {
+                        "Aggregation": {
+                          "Expression": {
+                            "Column": {
+                              "Expression": {
+                                "SourceRef": {
+                                  "Entity": "Correlation Coefficients"
+                                }
+                              },
+                              "Property": "correlation_coefficient"
+                            }
+                          },
+                          "Function": 4
+                        }
+                      },
+                      "FillRule": {
+                        "linearGradient3": {
+                          "min": {
+                            "color": {
+                              "Literal": {
+                                "Value": "'#a1ddef'"
+                              }
+                            },
+                            "value": {
+                              "Literal": {
+                                "Value": "-1D"
+                              }
+                            }
+                          },
+                          "mid": {
+                            "color": {
+                              "Literal": {
+                                "Value": "'#FFFFFF'"
+                              }
+                            },
+                            "value": {
+                              "Literal": {
+                                "Value": "0D"
+                              }
+                            }
+                          },
+                          "max": {
+                            "color": {
+                              "Literal": {
+                                "Value": "'#fd817e'"
+                              }
+                            },
+                            "value": {
+                              "Literal": {
+                                "Value": "1D"
+                              }
+                            }
+                          },
+                          "nullColoringStrategy": {
+                            "strategy": {
+                              "Literal": {
+                                "Value": "'asZero'"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "data": [
+              {
+                "dataViewWildcard": {
+                  "matchingOption": 1
+                }
+              }
+            ],
+            "metadata": "Sum(DynamicQueryCorrelation.correlation_coefficient)"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Minimal'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": -0.5
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Descriptive Statistics'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "12D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 1,
+                      "Percent": 0.2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "isHidden": true
+}

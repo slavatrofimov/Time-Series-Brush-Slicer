@@ -6,6 +6,11 @@ A Power BI custom visual that provides an interactive time range selector with b
 
 The Time Series Brush Slicer enables users to select time ranges visually using a brush interaction over a time series chart. Unlike traditional slicers that query data for every filter combination, this visual outputs the selected time range as a **single text string** that can be passed as a parameter to DirectQuery queries, enabling efficient query execution against large-scale data sources.
 
+![Screenshot](/assets/Time-Series-Brush-Slicer-Samples-Screenshot.png)
+
+## Get started
+[Solution accelerator for visualizing time series data with Power BI and KQL Databases](/examples/Time%20Series%20Visualization%20with%20Power%20BI%20+%20KQL.md) illustrates how the time series brush slicer can be used in an end-to-end solution and enables you to customize the solution accelerator to work with your data.
+
 ## Key Benefits for DirectQuery Scenarios
 
 ### Optimized for KQL Databases in Fabric
@@ -235,13 +240,12 @@ Line Settings → Line Color → fx → Gradient
 ## Best Practices
 
 ### Data Volume
-- Use with datasets containing 100 to 100,000+ time points
-- Enable data reduction in capabilities.json (currently set to 30,000 points)
-- For larger datasets, use server-side aggregation in your query
+- Use with datasets containing up to billions of data points
+- For larger datasets, use server-side binning and aggregation in your query
 
 ### Performance Optimization
 - Always use DirectQuery mode for large datasets
-- Create indexes on datetime columns in your source database
+- Create indexes on datetime columns in your source database (if applicable)
 - Use the visual's filter output rather than traditional slicers for time filtering
 - Consider date binning (hourly, daily) for very high-frequency data
 

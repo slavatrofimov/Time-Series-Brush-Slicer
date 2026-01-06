@@ -1,0 +1,78 @@
+table Tags
+	lineageTag: 39d24e29-cdde-4413-a48a-800393eb2305
+
+	column Tag
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 03bdbfd4-6eb5-4275-a333-9c990e2a9725
+		summarizeBy: none
+		sourceColumn: Tag
+
+		annotation SummarizationSetBy = Automatic
+
+	column TagName
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 36e004ff-9c2b-40d0-96ce-b0253414f7a0
+		summarizeBy: none
+		sourceColumn: TagName
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 2,
+				  "kind": 1,
+				  "supportsMultipleValues": true,
+				  "selectAllValue": ""
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column Level1
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: d697da07-9c2c-4b00-99d7-bb7113ca3955
+		summarizeBy: none
+		sourceColumn: Level1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Level2
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 104aa089-60dc-4794-bf64-f4462526f283
+		summarizeBy: none
+		sourceColumn: Level2
+
+		annotation SummarizationSetBy = Automatic
+
+	column Level3
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 2e263ba6-3421-4eb7-ade3-6f6b73ba25e3
+		summarizeBy: none
+		sourceColumn: Level3
+
+		annotation SummarizationSetBy = Automatic
+
+	column Level4
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 74414b36-d635-4393-a44c-8852455d6599
+		summarizeBy: none
+		sourceColumn: Level4
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Tags = m
+		mode: directQuery
+		source =
+				let
+				    Query = p_kql_query_tag_metadata,
+				    Source = AzureDataExplorer.Contents(p_kql_cluster, p_kql_db, Query, [MaxRows=null, MaxSize=null, NoTruncate=null, AdditionalSetStatements=null])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Time Series Viz - Basic"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3404ae9b-1828-406a-83f4-143e5f516fa8"
+  }
+}

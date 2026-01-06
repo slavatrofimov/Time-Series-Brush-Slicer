@@ -1,0 +1,345 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "ebc8d0257280bf2aff74",
+  "position": {
+    "x": 488.05970149253733,
+    "y": 79.701492537313428,
+    "z": 18000,
+    "height": 113.73134328358209,
+    "width": 783.58208955223881,
+    "tabOrder": 18000
+  },
+  "visual": {
+    "visualType": "TimeSeriesBrushSlicerEFF0BAA64FAF4DC989E3AB4DE7610647",
+    "query": {
+      "queryState": {
+        "timestamp": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Time Brush"
+                    }
+                  },
+                  "Property": "Timestamp"
+                }
+              },
+              "queryRef": "Time Brush.Timestamp",
+              "nativeQueryRef": "Timestamp"
+            }
+          ]
+        },
+        "values": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Time Brush"
+                        }
+                      },
+                      "Property": "Value"
+                    }
+                  },
+                  "Function": 4
+                }
+              },
+              "queryRef": "Sum(Time Brush.Value)",
+              "nativeQueryRef": "Max of Value"
+            }
+          ]
+        },
+        "filterField": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Time Brush"
+                    }
+                  },
+                  "Property": "Time_brush_range_input"
+                }
+              },
+              "queryRef": "Time Brush.Time_brush_range_input",
+              "nativeQueryRef": "Time_brush_range_input"
+            }
+          ]
+        },
+        "anomalies": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Time Brush"
+                        }
+                      },
+                      "Property": "Anomaly"
+                    }
+                  },
+                  "Function": 4
+                }
+              },
+              "queryRef": "Sum(Time Brush.Anomaly)",
+              "nativeQueryRef": "Max of Anomaly"
+            }
+          ]
+        },
+        "series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Time Brush"
+                    }
+                  },
+                  "Property": "Tag"
+                }
+              },
+              "queryRef": "Time Brush.Tag",
+              "nativeQueryRef": "Tag"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Time Brush"
+                  }
+                },
+                "Property": "Timestamp"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "displaySettings": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            },
+            "backgroundColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "prefix": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Selected Time Range'"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'wf_standard-font, helvetica, arial, sans-serif'"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "italic": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "rangeTextMarginLeft": {
+              "expr": {
+                "Literal": {
+                  "Value": "5D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 1,
+                      "Percent": 0.2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "axisSettingsGroup": [
+        {
+          "properties": {
+            "showAxis": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "yAxisSettingsGroup": [
+        {
+          "properties": {
+            "showZeroLine": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "zeroLineStrokeWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "areaSettingsGroup": [
+        {
+          "properties": {
+            "areaOpacity": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "anomaliesSettings": [
+        {
+          "properties": {
+            "markerSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "3D"
+                }
+              }
+            },
+            "markerOpacity": {
+              "expr": {
+                "Literal": {
+                  "Value": "60D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 1,
+                      "Percent": 0.6
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

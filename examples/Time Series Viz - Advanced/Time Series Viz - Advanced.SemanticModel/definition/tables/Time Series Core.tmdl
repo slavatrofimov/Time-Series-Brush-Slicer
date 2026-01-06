@@ -1,0 +1,149 @@
+table 'Time Series Core'
+	lineageTag: ca8dd070-6b8e-438b-a4f4-b3dc1c88e14a
+
+	measure 'Chart Title' =
+			
+			VAR tagCount = COUNTROWS(Tags)
+			RETURN "Observations " & IF(SELECTEDVALUE(ChartConfig[SplitBy]) = "tag", "and anomalies ", "") & "for " & IF(tagCount>1, tagCount & " tags", SELECTEDVALUE(Tags[TagName]))
+		lineageTag: 6264ec8f-b8e3-4686-872d-a64239e70d9f
+
+	column timestamp
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetimeoffset
+		lineageTag: 70b4ed65-b48e-4ef7-acf7-e7ff4537766f
+		summarizeBy: none
+		sourceColumn: timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column value
+		dataType: double
+		sourceProviderType: double
+		lineageTag: a9ce8e24-2870-4cc7-b585-498987bdb80f
+		summarizeBy: sum
+		sourceColumn: value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column anomaly
+		dataType: double
+		sourceProviderType: double
+		lineageTag: 91c8ad39-9929-48c0-89ce-67635d09f67c
+		summarizeBy: sum
+		sourceColumn: anomaly
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column anomaly_indicator
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 36c52460-9955-4a3d-9d26-62f328874c91
+		summarizeBy: none
+		sourceColumn: anomaly_indicator
+
+		annotation SummarizationSetBy = Automatic
+
+	column TagName
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: d1a591ef-f1c0-43bd-815c-a11d361d59bc
+		summarizeBy: none
+		sourceColumn: TagName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Metric
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 7a1c7e85-7904-4383-962d-528e33b539bd
+		summarizeBy: none
+		sourceColumn: Metric
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: b1f0527e-40a7-478e-a7c7-48ab46721e84
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	column EngUnits
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: a4a70055-6e77-444a-aec4-b24d85f0afc1
+		summarizeBy: none
+		sourceColumn: EngUnits
+
+		annotation SummarizationSetBy = Automatic
+
+	column Asset
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 6cf1c1d6-0df6-4c58-b163-d3fc24196c29
+		summarizeBy: none
+		sourceColumn: Asset
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tag
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: d687fa54-6b07-4206-ab5a-3c62fc7250c7
+		summarizeBy: none
+		sourceColumn: Tag
+
+		annotation SummarizationSetBy = Automatic
+
+	column color
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: c76bfc18-d0ee-4fab-a528-2f01f672aa1a
+		summarizeBy: none
+		sourceColumn: color
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Time Series Core' = m
+		mode: directQuery
+		source = ```
+				let
+				    time_range = f_parse_time_brush_range(p_time_brush_range),
+				    start = time_range[Start],
+				    end = time_range[End],
+				    Query = "
+				    let start = todatetime('" & DateTime.ToText(start) & "');
+				    let end = todatetime('" & DateTime.ToText(end) & "');
+				    let bin_timespan = totimespan('" & f_bin_timespan("a - *custom*", start, end, p_preferred_bin_timespan, p_max_bins, null) & "');
+				    let TSMetadata = materialize(TimeseriesMetadata
+				        | where TimeseriesName in (" & f_parse_tags(p_tags) & ")
+				        | join  kind = inner TimeseriesHierarchy on TimeseriesId
+				        | project Tag = TimeseriesId, TagName = TimeseriesName, Metric = tostring(split(TimeseriesName, '-')[0]), Description, EngUnits, Asset = tostring(Path));
+				    Timeseries
+				    | project Tag = TimeseriesId, timestamp = Timestamp, value = Value
+				    | where timestamp  between (start .. end)
+				    | where Tag in (TSMetadata | project Tag)
+				    | make-series value = " & p_aggregation & "(value) default = double(null) on timestamp step bin_timespan by Tag 
+				    | project value = series_fill_forward(value), timestamp, Tag
+				    | extend anomaly = series_decompose_anomalies(value, 1.5, -1, 'linefit')
+				    | mv-expand timestamp, value, anomaly
+				    | project Tag, todatetime(timestamp), todouble(value), todouble(anomaly)
+				    | project Tag, timestamp, value, anomaly = iif(anomaly != 0, value, double(null)), anomaly_indicator = iif(anomaly != 0, '●', ''), color = iif(anomaly != 0, 'FireBrick', '')
+				    | lookup kind=leftouter (TSMetadata) on Tag
+				    ",
+				    Source = AzureDataExplorer.Contents(p_kql_cluster, p_kql_db, Query, [MaxRows=null, MaxSize=null, NoTruncate=null, AdditionalSetStatements=null])
+				in
+				    Source
+				```
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

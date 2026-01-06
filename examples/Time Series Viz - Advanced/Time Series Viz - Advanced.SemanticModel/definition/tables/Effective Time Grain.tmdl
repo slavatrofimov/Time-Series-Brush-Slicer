@@ -1,0 +1,39 @@
+table 'Effective Time Grain'
+	isHidden
+	lineageTag: 65cef854-7805-4e02-a4b4-7aca94e6c368
+
+	column EffectiveTimeGrain
+		dataType: string
+		isHidden
+		sourceProviderType: nvarchar(max)
+		lineageTag: 6a80bb9c-687e-49e4-a7cb-79d7d5e8e8d0
+		summarizeBy: none
+		sourceColumn: EffectiveTimeGrain
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Effective Time Grain' = m
+		mode: directQuery
+		source =
+				let
+				    time_range = f_parse_time_brush_range(p_time_brush_range),
+				    start = time_range[Start],
+				    end = time_range[End],
+				    Query = "
+				    let start = todatetime('" & DateTime.ToText(start) & "');
+				    let end = todatetime('" & DateTime.ToText(end) & "');
+				    let bin_timespan = '" & f_bin_timespan("a - *custom*", start, end, p_preferred_bin_timespan, p_max_bins, null) & "';
+				    datatable(Id:int)[1]
+				    | project EffectiveTimeGrain = bin_timespan",
+				    Source = AzureDataExplorer.Contents(p_kql_cluster, p_kql_db, Query, [MaxRows=null, MaxSize=null, NoTruncate=null, AdditionalSetStatements=null])
+				in
+				    Source
+
+	changedProperty = IsHidden
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

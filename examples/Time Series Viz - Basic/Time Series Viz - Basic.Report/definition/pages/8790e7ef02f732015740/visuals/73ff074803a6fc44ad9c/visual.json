@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "73ff074803a6fc44ad9c",
+  "position": {
+    "x": 11.174603174603174,
+    "y": 20.317460317460316,
+    "z": 4000,
+    "height": 46.730158730158728,
+    "width": 472.38095238095241,
+    "tabOrder": 3000
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Time Series Analysis",
+                    "textStyle": {
+                      "fontSize": "20pt",
+                      "color": "#336c75"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

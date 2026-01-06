@@ -1,0 +1,94 @@
+table 'Time Brush'
+	lineageTag: 2d446c52-05d8-41bd-a95d-e02527d74091
+
+	column Timestamp
+		dataType: dateTime
+		formatString: General Date
+		sourceProviderType: datetimeoffset
+		lineageTag: 3842116b-1585-4ade-8007-bd1cbf380b3d
+		summarizeBy: none
+		sourceColumn: Timestamp
+
+		annotation SummarizationSetBy = Automatic
+
+	column Tag
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 8d47cfe2-f1a9-479d-9b29-60b4a29ca56e
+		summarizeBy: none
+		sourceColumn: Tag
+
+		annotation SummarizationSetBy = Automatic
+
+	column Value
+		dataType: double
+		sourceProviderType: double
+		lineageTag: 162960bb-6b94-4b95-a7f4-1b92c23eebf6
+		summarizeBy: sum
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Anomaly
+		dataType: double
+		sourceProviderType: double
+		lineageTag: 1f40115c-676f-48b9-a68a-aa673c3b292a
+		summarizeBy: sum
+		sourceColumn: Anomaly
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Time_brush_range_input
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: b70418d0-d9a4-4b68-a4cb-d6d648284b08
+		summarizeBy: none
+		sourceColumn: Time_brush_range_input
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 2,
+				  "kind": 1,
+				  "selectAllValue": "__SelectAll__"
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Time Brush' = m
+		mode: directQuery
+		source =
+				let
+				    time_range = f_calculate_time_range(p_relative_time_period, p_start_date, p_end_date, p_anchor_date),
+				    Query = "
+				    let start = todatetime('" & DateTime.ToText(time_range[Start]) & "');
+				    let end = todatetime('" & DateTime.ToText(time_range[End]) & "');
+				    let bin_timespan = totimespan('" & f_bin_timespan(p_relative_time_period, p_start_date, p_end_date, p_preferred_bin_timespan, p_max_bins, p_anchor_date) & "');
+				    let Tags = " & p_kql_query_tag_metadata & " | where TagName in (" & f_parse_tags(p_tags) & ") | project Tag;
+				    "& p_kql_query_timeseries & "
+				    | where Timestamp  between (start .. end)
+				    | where Tag in (Tags)
+				    | make-series Value = " & p_aggregation & "(Value) on Timestamp step bin_timespan by Tag
+				    | extend stats = series_stats_dynamic(Value)  // returns dynamic object with mean, stdev, etc.
+				    | extend mean = todouble(stats.avg), stdev = todouble(stats.stdev)
+				    | extend centered = series_subtract(Value, mean)  // subtract mean from each element
+				    | extend Z_score = series_divide(centered, stdev) // divide by stdev
+				    | project Tag, Timestamp, Z_score
+				    | extend Anomaly = series_decompose_anomalies(Z_score, 1.5, -1, 'linefit')
+				    | mv-expand Timestamp, Z_score, Anomaly
+				    | project todatetime(Timestamp), tostring(Tag), todouble(Z_score), Anomaly = todouble(Anomaly)
+				    | project Timestamp, Tag, Z_score, Anomaly = iif(Anomaly != 0, Z_score, double(null))
+				    | project Timestamp, Tag, Value = Z_score, Anomaly, Time_brush_range_input = ''
+				    ",
+				    Source = AzureDataExplorer.Contents(p_kql_cluster, p_kql_db, Query, [MaxRows=null, MaxSize=null, NoTruncate=null, AdditionalSetStatements=null]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Timestamp", type datetime}})
+				in
+				    #"Changed Type"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

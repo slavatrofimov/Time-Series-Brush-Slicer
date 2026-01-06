@@ -1,0 +1,368 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.5.0/schema.json",
+  "name": "ebc8d0257280bf2aff74",
+  "position": {
+    "x": 488.05970149253733,
+    "y": 79.701492537313428,
+    "z": 18001,
+    "height": 113.73134328358209,
+    "width": 783.58208955223881,
+    "tabOrder": 18001
+  },
+  "visual": {
+    "visualType": "TimeSeriesBrushSlicerEFF0BAA64FAF4DC989E3AB4DE7610647",
+    "query": {
+      "queryState": {
+        "timestamp": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Time Brush"
+                    }
+                  },
+                  "Property": "timestamp"
+                }
+              },
+              "queryRef": "Time Brush.timestamp",
+              "nativeQueryRef": "timestamp"
+            }
+          ]
+        },
+        "values": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Time Brush"
+                        }
+                      },
+                      "Property": "value"
+                    }
+                  },
+                  "Function": 4
+                }
+              },
+              "queryRef": "Sum(Time Brush.value)",
+              "nativeQueryRef": "Max of value"
+            }
+          ]
+        },
+        "series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Time Brush"
+                    }
+                  },
+                  "Property": "tag"
+                }
+              },
+              "queryRef": "Time Brush.tag",
+              "nativeQueryRef": "tag"
+            }
+          ]
+        },
+        "timelineMarkers": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Time Brush"
+                        }
+                      },
+                      "Property": "timeline_marker"
+                    }
+                  },
+                  "Function": 3
+                }
+              },
+              "queryRef": "Min(Time Brush.timeline_marker)",
+              "nativeQueryRef": "First timeline_marker"
+            }
+          ]
+        },
+        "filterField": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Time Brush"
+                    }
+                  },
+                  "Property": "time_brush_range_input"
+                }
+              },
+              "queryRef": "Time Brush.time_brush_range_input",
+              "nativeQueryRef": "time_brush_range_input"
+            }
+          ]
+        },
+        "anomalies": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "Time Brush"
+                        }
+                      },
+                      "Property": "anomaly"
+                    }
+                  },
+                  "Function": 4
+                }
+              },
+              "queryRef": "Sum(Time Brush.anomaly)",
+              "nativeQueryRef": "Max of anomaly"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Time Brush"
+                  }
+                },
+                "Property": "timestamp"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "displaySettings": [
+        {
+          "properties": {
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            },
+            "backgroundColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "prefix": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Selected Time Range'"
+                }
+              }
+            },
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'left'"
+                }
+              }
+            },
+            "fontFamily": {
+              "expr": {
+                "Literal": {
+                  "Value": "'wf_standard-font, helvetica, arial, sans-serif'"
+                }
+              }
+            },
+            "bold": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "italic": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "rangeTextMarginLeft": {
+              "expr": {
+                "Literal": {
+                  "Value": "5D"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 1,
+                      "Percent": 0.2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "axisSettingsGroup": [
+        {
+          "properties": {
+            "showAxis": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "yAxisSettingsGroup": [
+        {
+          "properties": {
+            "showZeroLine": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "zeroLineStrokeWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "1D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "areaSettingsGroup": [
+        {
+          "properties": {
+            "areaOpacity": {
+              "expr": {
+                "Literal": {
+                  "Value": "10D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "anomaliesSettings": [
+        {
+          "properties": {
+            "markerSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "3D"
+                }
+              }
+            },
+            "markerOpacity": {
+              "expr": {
+                "Literal": {
+                  "Value": "60D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "6D"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 1,
+                      "Percent": 0.6
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

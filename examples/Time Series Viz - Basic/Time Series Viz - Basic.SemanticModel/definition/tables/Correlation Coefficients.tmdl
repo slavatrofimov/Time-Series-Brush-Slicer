@@ -1,0 +1,64 @@
+table 'Correlation Coefficients'
+	lineageTag: 480bd883-324f-47c8-b60d-c4523d3920dd
+
+	column TagName
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 55b201a0-6f8d-46e8-8006-371492b2ca40
+		summarizeBy: none
+		sourceColumn: TagName
+
+		annotation SummarizationSetBy = Automatic
+
+	column TagName1
+		dataType: string
+		sourceProviderType: nvarchar(max)
+		lineageTag: 5752f56c-30ed-48e7-b00c-d504ac879d71
+		summarizeBy: none
+		sourceColumn: TagName1
+
+		annotation SummarizationSetBy = Automatic
+
+	column Correlation_coefficient
+		dataType: double
+		sourceProviderType: double
+		lineageTag: 097bdc88-abc6-4c5d-b644-555fb0f92fc7
+		summarizeBy: sum
+		sourceColumn: Correlation_coefficient
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Correlation Coefficients' = m
+		mode: directQuery
+		source =
+				let
+				    time_range = f_parse_time_brush_range(p_time_brush_range),
+				    start = time_range[Start],
+				    end = time_range[End],
+				    Query = "
+				    let start = todatetime('" & DateTime.ToText(start) & "');
+				    let end = todatetime('" & DateTime.ToText(end) & "');
+				    let bin_timespan = totimespan('" & f_bin_timespan("a - *custom*", start, end, p_preferred_bin_timespan, p_max_bins, null) & "');
+				    let tags = " & p_kql_query_tag_metadata & " | where TagName in (" & f_parse_tags(p_tags) & ");
+				    let time_series = " & p_kql_query_timeseries & "
+				    | where Timestamp  between (start .. end)
+				    | where Tag in (tags | project Tag)
+				    | extend join_key = '1'
+				    | make-series Value = " & p_aggregation & "(Value) default = double(null) on Timestamp from start to end step bin_timespan by Tag, join_key
+				    | lookup kind=leftouter tags on Tag
+				    | project Tag, Value, Timestamp, TagName, join_key;
+				    time_series
+				    | join kind=inner time_series on join_key
+				    | where strcmp(TagName, TagName1) <= 0
+				    | extend Correlation_coefficient = series_pearson_correlation(Value, Value1)
+				    | project TagName, TagName1, Correlation_coefficient",
+				    Source = AzureDataExplorer.Contents(p_kql_cluster, p_kql_db, Query, [MaxRows=null, MaxSize=null, NoTruncate=null, AdditionalSetStatements=null])
+				in
+				    Source
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

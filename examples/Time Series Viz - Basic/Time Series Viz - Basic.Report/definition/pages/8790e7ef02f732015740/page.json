@@ -1,0 +1,87 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "8790e7ef02f732015740",
+  "displayName": "Time Series Analysis",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "objects": {
+    "outspacePane": [
+      {
+        "properties": {
+          "width": {
+            "expr": {
+              "Literal": {
+                "Value": "271L"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "filterCard": [
+      {
+        "properties": {
+          "backgroundColor": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "ThemeDataColor": {
+                    "ColorId": 0,
+                    "Percent": -0.1
+                  }
+                }
+              }
+            }
+          }
+        },
+        "selector": {
+          "id": "Available"
+        }
+      },
+      {
+        "properties": {
+          "backgroundColor": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "ThemeDataColor": {
+                    "ColorId": 7,
+                    "Percent": 0.6
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "50L"
+              }
+            }
+          }
+        },
+        "selector": {
+          "id": "Applied"
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "9b489cc6a6ac4dffe700",
+      "target": "73ff074803a6fc44ad9c",
+      "type": "NoFilter"
+    },
+    {
+      "source": "cba0c379f908e8383c95",
+      "target": "18a1591bc95380599be9",
+      "type": "NoFilter"
+    },
+    {
+      "source": "77fabee6ef70eaed2f4b",
+      "target": "cba0c379f908e8383c95",
+      "type": "NoFilter"
+    }
+  ]
+}

@@ -1,0 +1,351 @@
+/// Custom start date for the date range to be analyzed. This parameter is controlled by a report filter. Please do not modify the current value directly.
+expression p_start_date = #datetime(9999, 1, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: 52bfbd73-de3d-498a-8dd0-f7befb9a0a0f
+	queryGroup: 'Do NOT modify these parameters'
+	parameterValuesColumn: DateInputs.StartDate
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = DateTime
+
+/// Custom end date for the date range to be analyzed. This parameter is controlled by a report filter. Please do not modify the current value directly.
+expression p_end_date = #datetime(9999, 1, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: c216a96d-d561-41c0-92c7-bc3b7814989a
+	queryGroup: 'Do NOT modify these parameters'
+	parameterValuesColumn: DateInputs.EndDate
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = DateTime
+
+/// Maximum number of bins into which the selected date range could be split. This parameter is controlled by a report filter. Please do not modify the current value directly.
+expression p_max_bins = 1000 meta [IsParameterQuery=true, Type="Number", IsParameterQueryRequired=true]
+	lineageTag: 012df529-5981-44e8-b48c-072b16beaca1
+	queryGroup: 'Do NOT modify these parameters'
+	parameterValuesColumn: MaxBinsOptions.MaxBins
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Number
+
+/// Preferred time span of each time bin. This parameter is controlled by a report filter. Please do not modify the current value directly.
+expression p_preferred_bin_timespan = "Auto" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 39eface5-cb7e-4857-b204-047a0f30d99a
+	queryGroup: 'Do NOT modify these parameters'
+	parameterValuesColumn: TimeSpanOptions.TimespanLabel
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Which aggregation function would you like to use to summarize the raw data? This parameter is controlled by a report slicer. Please do not modify the current value directly.
+expression p_aggregation = "avg" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 717e0657-4889-485b-a5bf-31265904ca2a
+	queryGroup: 'Do NOT modify these parameters'
+	parameterValuesColumn: AggregationOptions.Aggregation
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// List of tag names to be included in the analysis. This parameter is controlled by a report slicer. Please do not modify the current value directly.
+expression p_tags = "N/A" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 0c82bb51-45c8-4bab-bf33-eca2541e75b5
+	queryGroup: 'Do NOT modify these parameters'
+	parameterValuesColumn: Tags.TagName
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Relative time period for the date range to be analyzed. This parameter is controlled by a report slicer. Please do not modify the current value directly.
+expression p_relative_time_period = "m - 7days" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 4deadde5-665a-47de-9973-c1f24d7be688
+	queryGroup: 'Do NOT modify these parameters'
+	parameterValuesColumn: RelativeTime.RelativeTime
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Custom end date for the relative time period selection. This parameter is controlled by a report filter. Please do not modify the current value directly.
+expression p_anchor_date = #datetime(9999, 1, 1, 0, 0, 0) meta [IsParameterQuery=true, Type="DateTime", IsParameterQueryRequired=true]
+	lineageTag: 98360765-e6ef-4d30-a391-69792b07b725
+	queryGroup: 'Do NOT modify these parameters'
+	parameterValuesColumn: DateInputs.AnchorDate
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = DateTime
+
+/// Text string representing the start and end dates of the time period selected by the Time Series Brush Slicer. This parameter is controlled by a report filter. Please do not modify the current value directly.
+expression p_time_brush_range = "1/1/9999 12:00:00 AM|1/1/9999 12:00:00 AM" meta [IsParameterQuery=true, Type="Text", IsParameterQueryRequired=true]
+	lineageTag: 117d1369-9ff2-423d-8106-5cb2abfccbe8
+	queryGroup: 'Do NOT modify these parameters'
+	parameterValuesColumn: 'Time Brush'.time_brush_range_input
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Update with the URL of your KQL cluster (such as https://help.kusto.windows.net/ or https://trd-f7k1zx2rzuqrjmb3wpd.z5.kusto.fabric.microsoft.com)
+expression p_kql_cluster = "https://help.kusto.windows.net/" meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true]
+	lineageTag: f617dafa-ecf6-450e-9ad8-e2b27b9c2fa5
+	queryGroup: 'Configure These Parameters'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+/// Update with the name of your KQL Database
+expression p_kql_db = "Trender" meta [IsParameterQuery=true, Type="Any", IsParameterQueryRequired=true]
+	lineageTag: 8a3fcb5f-94c5-40e2-8d8c-9aca6218d225
+	queryGroup: 'Configure These Parameters'
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Text
+
+expression f_bin_timespan = ```
+		let
+		    get_bin_timespan = (
+		        relative_time as text,
+		        optional start as datetime,
+		        optional end as datetime,
+		        optional preferred_bin_timespan as text,
+		        optional max_bins as number,
+		        optional anchor_date as nullable datetime
+		    ) as text =>
+		    let
+		        //If max bins parameter is not specified, default to 1000
+		        _max_bins = if max_bins = null then 1000 else max_bins,
+		        
+		        // Use CalculateTimePeriod to get start and end times
+		        TimeRange = f_calculate_time_range(
+		            relative_time, 
+		            start, 
+		            end, 
+		            anchor_date
+		        ),
+		        
+		        _start = TimeRange[Start],
+		        _end = TimeRange[End],
+		        
+		        // Parse bin timespan to seconds
+		        ParseBinTimespan = (binTime as nullable text) as number =>
+		            let
+		                // Handle null or "Auto" - return a large number to force auto-calculation
+		                result = if binTime = null or binTime = "Auto" then 1
+		                else
+		                    let
+		                        stripped = Text.Replace(Text.Replace(binTime, "sec", ""), "min", ""),
+		                        stripped2 = Text.Replace(Text.Replace(stripped, "hour", ""), "day", ""),
+		                        stripped3 = Text.Replace(stripped2, "s", ""),
+		                        num = Number.FromText(stripped3),
+		                        multiplier = if Text.Contains(binTime, "day") then 86400
+		                            else if Text.Contains(binTime, "hour") then 3600
+		                            else if Text.Contains(binTime, "min") then 60
+		                            else 1
+		                    in
+		                        num * multiplier
+		            in
+		                result,
+		        
+		        _preferred_bin_seconds = ParseBinTimespan(preferred_bin_timespan),
+		        _duration = Duration.TotalSeconds(_end - _start),
+		        _preferred_bins = _duration / _preferred_bin_seconds,
+		        
+		        // Standard timespans table
+		        _standard_timespans = #table(
+		            {"seconds_per_bin", "bin_timespan_label"},
+		            {
+		                {1, "1sec"},
+		                {2, "2sec"},
+		                {5, "5sec"},
+		                {10, "10sec"},
+		                {15, "15sec"},
+		                {30, "30sec"},
+		                {60, "1min"},
+		                {120, "2min"},
+		                {300, "5min"},
+		                {600, "10min"},
+		                {900, "15min"},
+		                {1800, "30min"},
+		                {3600, "1hour"},
+		                {7200, "2hour"},
+		                {10800, "3hour"},
+		                {21600, "6hour"},
+		                {43200, "12hour"},
+		                {86400, "1day"},
+		                {604800, "7days"}
+		            }
+		        ),
+		        
+		        // Find suitable standard timespan
+		        _standard_timespan = 
+		            let
+		                filtered = Table.AddColumn(
+		                    _standard_timespans,
+		                    "bins",
+		                    each _duration / [seconds_per_bin]
+		                ),
+		                suitable = Table.SelectRows(filtered, each [bins] <= _max_bins),
+		                sorted = Table.Sort(suitable, {{"bins", Order.Descending}}),
+		                first = if Table.RowCount(sorted) > 0 
+		                    then Table.First(sorted)[bin_timespan_label] 
+		                    else null
+		            in
+		                first,
+		        
+		        // Final result - handle null preferred_bin_timespan
+		        result = if preferred_bin_timespan <> null and preferred_bin_timespan <> "Auto" and  _preferred_bins <= _max_bins 
+		            then preferred_bin_timespan
+		            else if _standard_timespan <> null then _standard_timespan
+		            else Text.From(Number.RoundDown(_duration / (_max_bins - 1))) & "sec"
+		    in
+		        result
+		in
+		    get_bin_timespan
+		```
+	lineageTag: f2660134-4992-4557-9173-c37f833306b0
+	queryGroup: HelperFunctions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression f_parse_tags = ```
+		let
+		    TagsParameter = (p_tags as any) as text =>
+		        let
+		            _tags = 
+		                if 
+		                    //check to see if the parameter is a list
+		                    Type.Is(
+		                        Value.Type(p_tags), 
+		                        List.Type
+		                    ) 
+		                then 
+		                    //if it is a list
+		                    let
+		                        //add single quotes around each value in the list
+		                        AddSingleQuotes = List.Transform(
+		                            p_tags, 
+		                            each "'" & Text.From(_) & "'"
+		                        ),
+		                        //then turn it into a comma-delimited list
+		                        DelimitedList = Text.Combine(
+		                            AddSingleQuotes, 
+		                            ","
+		                        )
+		                    in
+		                        DelimitedList
+		                else 
+		                    //if the parameter isn't a list
+		                    //just add single quotes around the parameter value
+		                    "'" & Text.From(p_tags) & "'"
+		        in 
+		            _tags
+		in
+		    TagsParameter
+		```
+	lineageTag: e1ad9a4c-eace-4b34-808d-d5601fa025d6
+	queryGroup: HelperFunctions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression f_calculate_time_range = ```
+		let
+		    CalculateTimePeriod = (
+		        optional p_relative_time_period as text,
+		        optional p_start_date as datetime,
+		        optional p_end_date as datetime,
+		        optional p_anchor_date as nullable datetime
+		    ) as record =>
+		    let
+		        // If anchor date is not specified, use current time
+		        anchor_date = if p_anchor_date = null or p_anchor_date = DateTime.FromText("9999-01-01")
+		            then DateTime.From(DateTimeZone.FixedLocalNow())
+		            else p_anchor_date,
+		        
+		        // Extract the relative time period (after " - ")
+		        relative_time_period = Text.AfterDelimiter(p_relative_time_period, " - "),
+		        
+		        // Parse relative time to duration
+		        ParseRelativeTime = (relTime as text) as duration =>
+		            let
+		            // Convert to lowercase for easier matching
+		            lowerTime = Text.Lower(relTime),
+		            
+		            // Extract the numeric part and unit
+		            // Handle formats like "7d", "24h", "30min", "2hours", "365days"
+		            numText = Text.Select(lowerTime, {"0".."9"}),
+		            num = if numText = "" then 1 else Number.FromText(numText),
+		            
+		            // Determine the unit by checking what text remains
+		            unit = Text.Replace(Text.Replace(Text.Replace(lowerTime, numText, ""), " ", ""), "s", ""),
+		            
+		            // Convert to duration based on unit
+		            result = 
+		                if unit = "min" or unit = "minute" then #duration(0, 0, num, 0)
+		                else if unit = "hour" or unit = "h" then #duration(0, num, 0, 0)
+		                else if unit = "day" or unit = "d" then #duration(num, 0, 0, 0)
+		                else if unit = "sec" or unit = "second" then #duration(0, 0, 0, num)
+		                else if unit = "week" or unit = "w" then #duration(num * 7, 0, 0, 0)
+		                else if unit = "month" then #duration(num * 30, 0, 0, 0)  // Approximate
+		                else if unit = "year" or unit = "y" then #duration(num * 365, 0, 0, 0)  // Approximate
+		                else #duration(0, 0, 0, 0)  // Default to 0 if unrecognized
+		    in
+		        result,
+		        
+		        // Calculate _start and _end based on relative time or custom dates
+		        _start = if relative_time_period = "*custom*" 
+		            then p_start_date
+		            else anchor_date - ParseRelativeTime(relative_time_period),
+		        
+		        _end = if relative_time_period = "*custom*" 
+		            then p_end_date
+		            else anchor_date,
+		        
+		        // Round to nearest second
+		        RoundToSecond = (dt as datetime) as datetime =>
+		            let
+		                totalSeconds = Duration.TotalSeconds(dt - #datetime(1970, 1, 1, 0, 0, 0)),
+		                roundedSeconds = Number.RoundDown(totalSeconds),
+		                rounded = #datetime(1970, 1, 1, 0, 0, 0) + #duration(0, 0, 0, roundedSeconds)
+		            in
+		                rounded
+		    in
+		        [Start = RoundToSecond(_start), End = RoundToSecond(_end)]
+		in
+		    CalculateTimePeriod
+		```
+	lineageTag: 4163792c-851d-4087-bd39-ffc774c2902c
+	queryGroup: HelperFunctions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+
+expression f_parse_time_brush_range =
+		let
+		       ParseTimeRange = (rangeText as text) =>
+		           let
+		               parts = Text.Split(rangeText, "|"),
+		               startText = parts{0},
+		               endText = parts{1},
+		               startDate = DateTime.FromText(startText),
+		               endDate = DateTime.FromText(endText)
+		           in
+		               [Start = startDate, End = endDate]
+		   in
+		       ParseTimeRange
+	lineageTag: aa25dc88-87de-4290-b13c-a89ed07f2310
+	queryGroup: HelperFunctions
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+

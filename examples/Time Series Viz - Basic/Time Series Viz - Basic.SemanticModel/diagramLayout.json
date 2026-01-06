@@ -1,0 +1,197 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 1898.787940539238,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1420.3830500146937,
+            "y": 123
+          },
+          "nodeIndex": "MaxBinsOptions",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 1704.3830500146937,
+            "y": 123
+          },
+          "nodeIndex": "AggregationOptions",
+          "nodeLineageTag": "8ed54783-9dee-47cf-ad51-3e8cecda3b04",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 1988.3830500146937,
+            "y": 111
+          },
+          "nodeIndex": "TimeSpanOptions",
+          "nodeLineageTag": "c719061e-a619-419d-a066-a05792d2d9ba",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 10
+        },
+        {
+          "location": {
+            "x": 2272.3830500146937,
+            "y": 111
+          },
+          "nodeIndex": "RelativeTime",
+          "nodeLineageTag": "b030fa30-a2fc-4c3a-bf0b-c644750bb22f",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 902.38305001469371,
+            "y": 25
+          },
+          "nodeIndex": "Tags",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 11
+        },
+        {
+          "location": {
+            "x": 618.38305001469371,
+            "y": 26.577651020077596
+          },
+          "nodeIndex": "SmallMultiplesConfig",
+          "nodeLineageTag": "e5033285-d4db-4d43-bb42-153cd66f0d23",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 12
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 56.562761799675442
+          },
+          "nodeIndex": "LegendConfig",
+          "nodeLineageTag": "98bd505b-f91e-40aa-8ef7-f9c0c3669093",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 13
+        },
+        {
+          "location": {
+            "x": 334.20156119318517,
+            "y": 47.422348979922333
+          },
+          "nodeIndex": "ChartConfig",
+          "nodeLineageTag": "b64ea08a-c524-49f6-91ea-4bd766412599",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 2556.3830500146937,
+            "y": 99
+          },
+          "nodeIndex": "DateInputs",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 2840.3830500146937,
+            "y": 25
+          },
+          "nodeIndex": "Time Series Core",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 3124.3830500146937,
+            "y": 99
+          },
+          "nodeIndex": "Correlation Coefficients",
+          "size": {
+            "height": 152,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 3408.3830500146937,
+            "y": 39
+          },
+          "nodeIndex": "Descriptive Statistics",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 3692.3830500146937,
+            "y": 63
+          },
+          "nodeIndex": "Time Brush",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 14
+        },
+        {
+          "location": {
+            "x": 3976.3830500146937,
+            "y": 123
+          },
+          "nodeIndex": "Effective Time Grain",
+          "nodeLineageTag": "65cef854-7805-4e02-a4b4-7aca94e6c368",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 5
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 53.507818240696515,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

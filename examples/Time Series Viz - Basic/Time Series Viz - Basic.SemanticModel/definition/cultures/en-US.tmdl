@@ -1,0 +1,95 @@
+cultureInfo en-US
+
+	linguisticMetadata =
+			{
+			  "Version": "2.0.0",
+			  "Language": "en-US",
+			  "Entities": {
+			    "time_series_core.metric": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Time Series Core",
+			          "ConceptualProperty": "metric"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "time_series_core.meter": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Time Series Core",
+			          "ConceptualProperty": "meter"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "time_series_core.tagname": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Time Series Core",
+			          "ConceptualProperty": "TagName"
+			        }
+			      },
+			      "State": "Generated",
+			      "Terms": [
+			        {
+			          "TagName": {
+			            "State": "Suggested",
+			            "Source": {
+			              "Type": "External",
+			              "Agent": "PowerBI.VisualColumnRename"
+			            },
+			            "Weight": 0.9
+			          }
+			        }
+			      ]
+			    },
+			    "descriptive_statistics.series_stats_value_avg": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Descriptive Statistics",
+			          "ConceptualProperty": "series_stats_value_avg"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "descriptive_statistics.series_stats_value_min": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Descriptive Statistics",
+			          "ConceptualProperty": "series_stats_value_min"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "descriptive_statistics.series_stats_value_max": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Descriptive Statistics",
+			          "ConceptualProperty": "series_stats_value_max"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "descriptive_statistics.series_stats_value_stdev": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Descriptive Statistics",
+			          "ConceptualProperty": "series_stats_value_stdev"
+			        }
+			      },
+			      "State": "Generated"
+			    },
+			    "descriptive_statistics.series_stats_value_variance": {
+			      "Definition": {
+			        "Binding": {
+			          "ConceptualEntity": "Descriptive Statistics",
+			          "ConceptualProperty": "series_stats_value_variance"
+			        }
+			      },
+			      "State": "Generated"
+			    }
+			  }
+			}
+		contentType: json
+
