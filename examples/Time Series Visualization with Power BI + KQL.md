@@ -5,7 +5,7 @@ Last updated: 2025-01-06
 
 This solution accelerator helps you analyze time series data in Power BI using an interactive brush-based selection experience combined with a KQL Database in Microsoft Fabric (or Azure Data Explorer). Simply select what metrics to analyze, select an initial time period, and choose how to lay out your charts. Then, drag the time-brushing controls to select any portion of the time range with your visuals updating instantly, even when working with billions of rows. 
 
-![Time Series Analysis in Power BI - Report Screenshot](/assets/Time-Series-Analysis-PBI-Screenshot.png)
+https://github.com/user-attachments/assets/cdfc3887-a217-4b70-b096-5896e2596bff
 
 This solution accelerator uses tag-based data, which is common in operational and industrial control scenarios (a *tag* is just an identifier for an instrument or device). Yet, this solution can be adapted to numerous other time-series analytics scenarios. 
 
