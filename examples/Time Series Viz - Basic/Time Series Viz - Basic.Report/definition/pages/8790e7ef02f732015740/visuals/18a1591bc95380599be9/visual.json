@@ -98,13 +98,13 @@
                           "Entity": "Time Series Core"
                         }
                       },
-                      "Property": "Anomaly"
+                      "Property": "Anomaly_indicator"
                     }
                   },
-                  "Function": 4
+                  "Function": 3
                 }
               },
-              "queryRef": "Sum(Time Series Core.Anomaly)",
+              "queryRef": "Min(Time Series Core.Anomaly_indicator)",
               "nativeQueryRef": "Is Anomaly",
               "displayName": "Is Anomaly"
             }
@@ -579,25 +579,6 @@
   },
   "filterConfig": {
     "filters": [
-      {
-        "name": "cfd6f9b00a5b508d28bd",
-        "field": {
-          "Aggregation": {
-            "Expression": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Time Series Core"
-                  }
-                },
-                "Property": "Anomaly"
-              }
-            },
-            "Function": 4
-          }
-        },
-        "type": "Advanced"
-      },
       {
         "name": "6cb8089c07c6da347e59",
         "field": {
